@@ -1,8 +1,0 @@
-{
-    "token": "",
-    "channel_ids": [1238460878597259000],
-    "command_prefixs": ["sb!"],
-    "change_channel_later": 30,
-    "2captcha_api": "",
-    "user_allow_commands": []
-}
