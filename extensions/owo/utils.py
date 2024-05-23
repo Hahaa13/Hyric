@@ -45,8 +45,8 @@ class Gem:
         for gem in agems:
             if not gem and len(self.gems[count]) > 0 and (not count == 3 or self.configs["use_star_gem"]):
                 usegems.append(self.gems[count][gem_sort][0])
-                if self.gems[count][gem_sort][1] == 1:
-                    self.gems[count].remove(self.gems[count][gem_sort])
+                if self.gems[count][gem_sort][1] <= 1:
+                    del self.gems[count][gem_sort]
             count += 1
         if usegems != [] and self.ready:
             await message.channel.send(f"{self.configs['owo_prefix']} use " + " ".join(usegems))
