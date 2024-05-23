@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # Vscode and idx and configs
-
+configs.json
 .idx
 .vscode
 
