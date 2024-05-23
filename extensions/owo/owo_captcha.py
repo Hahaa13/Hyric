@@ -42,5 +42,5 @@ class OwO_Captcha(commands.Cog):
                     self.bot.logger.info("CAPTCHA - NOT FOUND")
                     
 async def setup(bot: Bot) -> None:
-    if bot.configs["2captcha"] != "":
+    if bot.configs["2captcha_api"] != "":
         await bot.add_cog(OwO_Captcha(bot))
