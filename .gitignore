@@ -1,8 +1,21 @@
+<<<<<<< HEAD
+=======
+# Hyric
+./configs.json
+
+>>>>>>> 6c54077 (Initial commit)
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
+<<<<<<< HEAD
+=======
+#vscode and idx
+.idx
+.vscode
+
+>>>>>>> 6c54077 (Initial commit)
 # C extensions
 *.so
 
