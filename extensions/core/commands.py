@@ -27,17 +27,7 @@ class Commands(commands.Cog):
     @commands.command()
     async def reload(self, ctx, d: str) -> None:
         d = d.lower()
-        if d in ["configs", "config", "cf"]:
-            try:
-                with open("configs.json", "r") as f:
-                    configs = json.load(f)
-                self.bot.configs = configs
-                await ctx.send("```✅Reload Success Configs```")
-                return
-            except Exception as e:
-                self.bot.logger.warning(f"Reload Configs Error: {e}")
-                await ctx.send("```❌Reload Config Failed, please check console```")
-        elif d.startswith("extensions."):
+        if d.startswith("extensions."):
             try:
                 self.bot.reload_extension(d)
                 await ctx.send(f"```✅Reload Success {d}```")
