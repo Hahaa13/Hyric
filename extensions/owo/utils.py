@@ -32,7 +32,7 @@ class Gem:
             content = content.replace(k,v)
         gemtypes = ["gem1", "gem3", "gem4", "star"]
         for gem in gemtypes:
-            for agem in re.findall("`[0-9]{1,3}`<:[a-z]"+gem+":[0-9]{1,20}>[0-9]{1,999999}",content):
+            for agem in re.findall("`[0-9]{1,3}`<a{0,1}:[a-z]"+gem+":[0-9]{1,20}>[0-9]{1,999999}",content):
                 self.gems[gemtypes.index(gem)].append([agem.split("`")[1], int(agem.split(">")[-1])])
         self.ready = True
 
