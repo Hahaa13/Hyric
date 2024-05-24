@@ -5,6 +5,7 @@
     "giveaway_channels": [1099453684691243098,1168797748343099444,1168797827464429618],
     "max_captcha_attemp": 3,
     "use_star_gem": true,
+    "use_lootbox": true,
     "gem_sort": "low",
     "pray_or_curse_id": false,
     "slot_rate": 2,

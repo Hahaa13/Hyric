@@ -26,6 +26,8 @@ class Gem:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
         message = await self.bot.wait_for('message', check=check, timeout=5)
         content = message.content
+        if "050" in content and self.configs["use_lootbox"]:
+            await channel.send(f"{self.configs['owo_prefix']} lb all")
         for k,v in self.mapping.items():
             content = content.replace(k,v)
         gemtypes = ["gem1", "gem3", "gem4", "star"]

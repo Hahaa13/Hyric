@@ -60,12 +60,12 @@ class OwO(commands.Cog):
     async def hunt(self) -> None:
         if not self.captcha:
             await self.cooldown_command()
-            if not self.gem.ready:
-                await self.gem.gem_data_collect(self.bot.channel)
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hunt")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🌱 | {self.bot.user.display_name}**" in m.content
             message = await self.bot.wait_for('message', check=check, timeout=5)
+            if not self.gem.ready or (self.configs["use_lootbox"] and ":box:" in message.content):
+                await self.gem.gem_data_collect(self.bot.channel)
             await self.gem.on_hunt(message)
             xp = re.findall("[0-9]{1,99}xp", message.content)
             self.bot.logger.info(f"OWO HUNT - {xp[0].upper()}")
