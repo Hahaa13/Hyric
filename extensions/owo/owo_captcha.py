@@ -31,10 +31,10 @@ class OwO_Captcha(commands.Cog):
                         await self.dm_channel.send(captcha["code"])
                         message = await self.bot.wait_for("message", check=check, timeout=10)
                         if "🚫" in message.content:
-                            self.bot.solver.report(captcha["id"], False)
+                            self.bot.solver.report(captcha["captchaId"], False)
                             self.bot.logger.warning("CAPTCHA - ERROR")
                             continue
-                        self.bot.solver.report(captcha["id"], True)
+                        self.bot.solver.report(captcha["captchaId"], True)
                         self.bot.logger.info(f"CAPTCHA - SLOVED CODE: {captcha['code']}")
                         self.owo.captcha = False
                         return
