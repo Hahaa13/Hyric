@@ -1,3 +1,4 @@
+import os
 import glob
 import discord
 import logging
@@ -21,7 +22,7 @@ async def on_ready():
     for extension in glob.glob("extensions/**"):
         for extension_file in sorted(glob.glob(f"{extension}/**/*.py", recursive=True)):
             try:
-                await bot.load_extension(extension_file.replace(".py", "").replace("/", "."))
+                await bot.load_extension(extension_file.replace(".py", "").replace(os.sep, "."))
             except Exception as e:
                 bot.logger.error(e)
         bot.logger.info(f"Load extension {extension}")

@@ -18,16 +18,21 @@ class Gem:
         self.configs = configs
         self.gems = [[],[],[],[]]
         self.mapping = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"}
+    
+    def _check(self, m) -> bool:
+        return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
 
     async def gem_data_collect(self, channel) -> None:
         await channel.send(f"{self.configs['owo_prefix']} inv")
         self.bot.logger.info("OWO INVENTORY")
-        def check(m) -> bool:
-            return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=self._check, timeout=5)
         content = message.content
         if "050" in content and self.configs["use_lootbox"]:
             await channel.send(f"{self.configs['owo_prefix']} lb all")
+            self.bot.logger.info("OWO LOOTBOX")
+            await channel.send(f"{self.configs['owo_prefix']} inv")
+            message = await self.bot.wait_for("message", check=self._check, timeout=5)
+        content = message.content
         for k,v in self.mapping.items():
             content = content.replace(k,v)
         gemtypes = ["gem1", "gem3", "gem4", "star"]
