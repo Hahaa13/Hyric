@@ -21,8 +21,8 @@ class OwO(commands.Cog):
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
-        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip]
-        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip"]
+        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot]
+        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
@@ -301,7 +301,7 @@ class OwO(commands.Cog):
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
             message = await self.bot.wait_for("message", check=check, timeout=5)
-            await asyncio.sleep(random.randint(3,5))
+            await asyncio.sleep(random.randint(5,10))
             if "lost" in message.content:
                 self.bot.logger.info(f"OWO COINFLIP LOST {self.coinflip_cow}")
                 self.coinflip_cow *= self.configs["coinflip_rate"]
@@ -315,6 +315,18 @@ class OwO(commands.Cog):
         if not self.captcha:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} slot {self.slot_cow}")
+            def check(m) -> bool:
+                return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
+            message = await self.bot.wait_for("message", check=check, timeout=5)
+            await asyncio.sleep(random.randint(5,10))
+            if "nothing" in message.content:
+                self.bot.logger.info(f"OWO SLOT LOST {self.slot_cow}")
+                self.slot_cow *= self.configs["slot_rate"]
+            else:
+                wincow = int(re.findall(" [0-9]{1,99}", message.content)[1].replace(" ", ""))
+                self.bot.logger.info(f"OWO SLOT WON {wincow}")
+                self.slot_cow = self.configs["enables"]["slot"]
+            await asyncio.sleep(random.randint(18,25))
 
 async def setup(bot: Bot) -> None:
     await bot.add_cog(OwO(bot))

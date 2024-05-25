@@ -2,6 +2,7 @@ import glob
 import os
 import re
 import io
+import asyncio
 import aiohttp
 import numpy as np
 from PIL import Image
@@ -29,6 +30,7 @@ class Gem:
         message = await self.bot.wait_for('message', check=self._check, timeout=5)
         content = message.content
         if "050" in content and self.configs["use_lootbox"]:
+            await asyncio.sleep(12,16)
             await channel.send(f"{self.configs['owo_prefix']} lb all")
             self.bot.logger.info("OWO LOOTBOX")
             await channel.send(f"{self.configs['owo_prefix']} inv")
