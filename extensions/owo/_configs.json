@@ -26,7 +26,7 @@
         "text_exp": true,
         "text_owo": true,
         "slot": false,
-        "coinflip": false,
+        "coinflip": 1,
         "blackjack": false,
         "giveaway_join": true
     }

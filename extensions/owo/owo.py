@@ -18,8 +18,11 @@ class OwO(commands.Cog):
         self.configs = json.load(open("extensions/owo/_configs.json"))
         self.caches = json.load(open("extensions/owo/_caches.json"))
         self.gem = Gem(bot, self.configs)
-        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo]
-        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo"]
+        self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
+        self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
+        self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
+        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip]
+        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
@@ -289,6 +292,29 @@ class OwO(commands.Cog):
                         with open("extensions/owo/_caches.json", "w") as f:
                             json.dump(self.owo.caches, f)
                         self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
+
+    @tasks.loop(seconds=3)
+    async def coinflip(self) -> None:
+        if not self.captcha:
+            await self.cooldown_command()
+            await self.bot.channel.send(f"{self.configs['owo_prefix']} cf {self.coinflip_cow}")
+            def check(m) -> bool:
+                return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
+            message = await self.bot.wait_for("message", check=check, timeout=5)
+            await asyncio.sleep(random.randint(3,5))
+            if "lost" in message.content:
+                self.bot.logger.info(f"OWO COINFLIP LOST {self.coinflip_cow}")
+                self.coinflip_cow *= self.configs["coinflip_rate"]
+            else:
+                self.bot.logger.info(f"OWO COINFLIP WON {self.coinflip_cow * 2}")
+                self.coinflip_cow = self.configs["enables"]["coinflip"]
+            await asyncio.sleep(random.randint(18,25))
+    
+    @tasks.loop(seconds=3)
+    async def slot(self):
+        if not self.captcha:
+            await self.cooldown_command()
+            await self.bot.channel.send(f"{self.configs['owo_prefix']} slot {self.slot_cow}")
 
 async def setup(bot: Bot) -> None:
     await bot.add_cog(OwO(bot))

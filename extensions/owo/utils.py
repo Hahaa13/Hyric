@@ -1,4 +1,5 @@
 import glob
+import os
 import re
 import io
 import aiohttp
@@ -66,7 +67,7 @@ class HuntBotCaptcha:
         check_images = glob.glob("extensions/owo/huntbot_letter/**/*.png")
         for check_image in sorted(check_images):
             img = Image.open(check_image)
-            self.checks.append((img, img.size, check_image.split(".")[0].split("/")[-1]))
+            self.checks.append((img, img.size, check_image.split(".")[0].split(os.sep)[-1]))
             
     async def solver(self, captcha_url: str) -> list:
         async with aiohttp.ClientSession() as session:
