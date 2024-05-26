@@ -74,25 +74,20 @@ class HuntBotCaptcha:
     async def solver(self, captcha_url: str) -> list:
         async with aiohttp.ClientSession() as session:
             async with session.get(captcha_url) as resp:
-                large_array = np.array(Image.open(io.BytesIO(await resp.read())))
+                large_image = Image.open(io.BytesIO(await resp.read()))
+                large_array = np.array(large_image)
+
         matches = []
-        for check in self.checks:
-            small_array = np.array(check[0])
-            large_h, large_w = large_array.shape[:2]
-            small_h, small_w = small_array.shape[:2]
-            for y in range(large_h - small_h + 1):
-                for x in range(large_w - small_w + 1):
+        for img, (small_w, small_h), letter in self.checks:
+            small_array = np.array(img)
+            mask = small_array[:, :, 3] > 0
+            for y in range(large_array.shape[0] - small_h + 1):
+                for x in range(large_array.shape[1] - small_w + 1):
                     segment = large_array[y:y + small_h, x:x + small_w]
-                    mask = (small_array[:, :, 3] > 0) 
                     if np.array_equal(segment[mask], small_array[mask]):
-                        overlap = False
-                        for m in matches:
-                            if (m[0] - check[1][0] < x < m[0] + check[1][0]) and (m[1] - check[1][1] < y < m[1] + check[1][1]):
-                                overlap = True
-                                break
-                        if not overlap:
-                            matches.append((x, y, check[2]))
-        return sorted(matches,key=lambda tup: tup[0])
+                        if not any((m[0] - small_w < x < m[0] + small_w) and (m[1] - small_h < y < m[1] + small_h) for m in matches):
+                            matches.append((x, y, letter))
+        return sorted(matches, key=lambda tup: tup[0])
 
     def gettext(self, matches: list) -> str:
         return "".join([i[2] for i in matches])
