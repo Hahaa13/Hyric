@@ -18,9 +18,11 @@ class OwO_Captcha(commands.Cog):
     async def on_message(self, message):
         if self.owo_user.id == message.author.id:
             if "https://owobot.com/captcha" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
+                self.owo.pause = True
                 self.owo.captcha = True
                 self.bot.logger.info("CAPTCHA LINK FOUND")
             elif "⚠️" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
+                self.owo.pause = True
                 self.owo.captcha = True
                 if len(message.attachments) > 0:
                     self.bot.logger.info("CAPTCHA IMAGE FOUND")
@@ -38,6 +40,7 @@ class OwO_Captcha(commands.Cog):
                             continue
                         self.bot.solver.report(captcha["captchaId"], True)
                         self.bot.logger.info(f"CAPTCHA - SLOVED CODE: {captcha['code']}")
+                        self.owo.pause = False
                         self.owo.captcha = False
                         return
                 else:

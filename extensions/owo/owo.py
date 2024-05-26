@@ -13,6 +13,7 @@ class OwO(commands.Cog):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.captcha = False
+        self.pause = False
         self.lock = asyncio.Lock()
         self.hbcaptcha = HuntBotCaptcha()
         self.configs = json.load(open("extensions/owo/_configs.json"))
@@ -43,6 +44,17 @@ class OwO(commands.Cog):
             if len(keys) < 2: self.caches["checks"][keys[0]] = True
             else: self.caches[keys[0]][keys[1]] = True
             json.dump(self.caches, f)
+    
+    @tasks.loop(seconds=3)
+    async def sleep(self):
+        await asyncio.sleep(self.configs["sleep_delay"])
+        self.bot.logger.info("OWO SLEEP ON")
+        self.pause = True
+        await asyncio.sleep(self.configs["sleep_time"])
+        while self.captcha:
+            await asyncio.sleep(10)
+        self.bot.logger.info("OWO SLEEP OFF")
+        self.pause = False
 
     @tasks.loop(seconds=3)
     async def cachemanager(self) -> None:
@@ -61,7 +73,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def hunt(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hunt")
             def check(m) -> bool:
@@ -76,7 +88,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def battle(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} battle")
             self.bot.logger.info("OWO BATTLE")
@@ -84,7 +96,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def daily(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             if self.caches["checks"]["daily"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
             await self.cooldown_command()
@@ -102,7 +114,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def pray_or_curse(self):
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             poc_user = ""
             if self.configs["pray_or_curse_id"] > 0:
@@ -113,7 +125,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def sell(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} sell {self.configs['enables']['sell']}")
             def check(m) -> bool:
@@ -125,7 +137,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def sac(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} sac {self.configs['enables']['sac']}")
             def check(m) -> bool:
@@ -137,7 +149,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def cookie(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             if self.caches["checks"]["cookie"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
             await self.cooldown_command()
@@ -148,7 +160,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def run(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             if self.caches["checks"]["run"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
             await self.cooldown_command()
@@ -167,7 +179,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def pup(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             if self.caches["checks"]["pup"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
             await self.cooldown_command()
@@ -186,7 +198,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def piku(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             if self.caches["checks"]["piku"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
             await self.cooldown_command()
@@ -205,7 +217,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def huntbot(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']}")
             def check(m) -> bool:
@@ -248,7 +260,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def text_exp(self):
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"https://fakerapi.it/api/v1/texts?_quantity=1?&_characters={random.randint(25,150)}") as resp:
@@ -260,7 +272,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def text_owo(self):
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send("owo")
             self.bot.logger.info("TEXT OWO")
@@ -295,7 +307,7 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def coinflip(self) -> None:
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} cf {self.coinflip_cow}")
             def check(m) -> bool:
@@ -313,7 +325,7 @@ class OwO(commands.Cog):
     
     @tasks.loop(seconds=3)
     async def slot(self):
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} slot {self.slot_cow}")
             def check(m) -> bool:
@@ -332,7 +344,7 @@ class OwO(commands.Cog):
     
     @tasks.loop(seconds=3)
     async def blackjack(self):
-        if not self.captcha:
+        if not self.pause:
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} bj {self.blackjack_cow}")
             def check(m) -> bool:
