@@ -209,7 +209,7 @@ class OwO(commands.Cog):
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']}")
             def check(m) -> bool:
-                return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id
+                return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "bot:" in m.content
             message = await self.bot.wait_for('message', check=check, timeout=5)
             if "|** `BEEP BOOP. I AM BACK WITH" in message.content:
                 self.bot.logger.info("OWO HUNTBOT CLAIMED")
@@ -301,7 +301,7 @@ class OwO(commands.Cog):
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
             message = await self.bot.wait_for("message", check=check, timeout=5)
-            await asyncio.sleep(random.randint(5,10))
+            await asyncio.sleep(random.randint(5,8))
             if "lost" in message.content:
                 self.bot.logger.info(f"OWO COINFLIP LOST {self.coinflip_cow}")
                 self.coinflip_cow *= self.configs["coinflip_rate"]
@@ -318,7 +318,7 @@ class OwO(commands.Cog):
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
             message = await self.bot.wait_for("message", check=check, timeout=5)
-            await asyncio.sleep(random.randint(5,10))
+            await asyncio.sleep(random.randint(6,8))
             if "nothing" in message.content:
                 self.bot.logger.info(f"OWO SLOT LOST {self.slot_cow}")
                 self.slot_cow *= self.configs["slot_rate"]
