@@ -19,9 +19,11 @@ class OwO_Captcha(commands.Cog):
         if self.owo_user.id == message.author.id:
             if "https://owobot.com/captcha" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
                 self.owo.captcha = True
+                self.bot.logger.info("CAPTCHA LINK FOUND")
             elif "⚠️" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
                 self.owo.captcha = True
                 if len(message.attachments) > 0:
+                    self.bot.logger.info("CAPTCHA IMAGE FOUND")
                     captcha_url = message.attachments[0].url
                     length = int(re.findall("[0-9] letter", message.content)[0].replace(" letter", ""))
                     def check(m) -> bool:

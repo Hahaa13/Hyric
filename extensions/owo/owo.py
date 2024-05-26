@@ -358,6 +358,9 @@ class OwO(commands.Cog):
                     self.blackjack_cow *= self.configs["blackjack_rate"]
                     if self.blackjack_cow > 250000: self.blackjack_cow = 250000
                     break
+                elif "You tied" in message.embeds[0].footer.text:
+                    self.bot.logger.info(f"OWO BLACKJACK TIED")
+                    break
                 else:
                     self.bot.logger.warning(f"OWO BLACKJACK ERROR NOT FOUND")
                     break
