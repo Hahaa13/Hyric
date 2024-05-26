@@ -21,8 +21,8 @@ class OwO(commands.Cog):
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
-        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot]
-        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot"]
+        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack]
+        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot", "blackjack"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
@@ -305,8 +305,9 @@ class OwO(commands.Cog):
             if "lost" in message.content:
                 self.bot.logger.info(f"OWO COINFLIP LOST {self.coinflip_cow}")
                 self.coinflip_cow *= self.configs["coinflip_rate"]
+                if self.coinflip_cow > 250000: self.coinflip_cow = 250000
             else:
-                self.bot.logger.info(f"OWO COINFLIP WON {self.coinflip_cow * 2}")
+                self.bot.logger.info(f"OWO COINFLIP WON {self.coinflip_cow}")
                 self.coinflip_cow = self.configs["enables"]["coinflip"]
             await asyncio.sleep(random.randint(18,25))
     
@@ -321,11 +322,45 @@ class OwO(commands.Cog):
             await asyncio.sleep(random.randint(6,8))
             if "nothing" in message.content:
                 self.bot.logger.info(f"OWO SLOT LOST {self.slot_cow}")
-                self.slot_cow *= self.configs["slot_rate"]
+                self.slot_cow = self.slot_cow * self.configs["slot_rate"]
+                if self.slot_cow > 250000: self.slot_cow = 250000
             else:
                 wincow = int(re.findall(" [0-9]{1,99}", message.content)[1].replace(" ", ""))
                 self.bot.logger.info(f"OWO SLOT WON {wincow}")
                 self.slot_cow = self.configs["enables"]["slot"]
+            await asyncio.sleep(random.randint(18,25))
+    
+    @tasks.loop(seconds=3)
+    async def blackjack(self):
+        if not self.captcha:
+            await self.cooldown_command()
+            await self.bot.channel.send(f"{self.configs['owo_prefix']} bj {self.blackjack_cow}")
+            def check(m) -> bool:
+                return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and len(m.embeds) == 1 and self.bot.user.name in m.embeds[0].author.name
+            message = await self.bot.wait_for("message", check=check, timeout=5)
+            while True:
+                await asyncio.sleep(3)
+                if "in progress" in message.embeds[0].footer.text or "resuming" in message.embeds[0].footer.text:
+                    point = int(re.findall("[0-9]{1,2}", message.embeds[0].fields[1].name)[0])
+                    if point < 17:
+                        if not message.reactions[0].me:
+                            await message.add_reaction("👊")
+                        else:
+                            await message.remove_reaction("👊", self.bot.user)
+                    elif point >= 17:
+                        await message.add_reaction("🛑")
+                elif "You won" in message.embeds[0].footer.text:
+                    self.bot.logger.info(f"OWO BLACKJACK WIN {self.blackjack_cow}")
+                    self.blackjack_cow = self.configs["enables"]["blackjack"]
+                    break
+                elif "You lost" in message.embeds[0].footer.text:
+                    self.bot.logger.info(f"OWO BLACKJACK LOST {self.blackjack_cow}")
+                    self.blackjack_cow *= self.configs["blackjack_rate"]
+                    if self.blackjack_cow > 250000: self.blackjack_cow = 250000
+                    break
+                else:
+                    self.bot.logger.warning(f"OWO BLACKJACK ERROR NOT FOUND")
+                    break
             await asyncio.sleep(random.randint(18,25))
 
 async def setup(bot: Bot) -> None:
