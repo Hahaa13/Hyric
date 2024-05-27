@@ -22,8 +22,8 @@ class OwO(commands.Cog):
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
-        fuctions = [self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack]
-        enables = ["hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot", "blackjack"]
+        fuctions = [self.sleep, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack]
+        enables = ["auto_sleep", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot", "blackjack"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
@@ -370,7 +370,7 @@ class OwO(commands.Cog):
                     self.blackjack_cow *= self.configs["blackjack_rate"]
                     if self.blackjack_cow > 250000: self.blackjack_cow = 250000
                     break
-                elif "You tied" in message.embeds[0].footer.text:
+                elif "You tied" in message.embeds[0].footer.text or "You both" in message.embeds[0].footer.text:
                     self.bot.logger.info(f"OWO BLACKJACK TIED")
                     break
                 else:
