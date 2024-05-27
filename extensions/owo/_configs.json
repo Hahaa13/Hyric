@@ -4,6 +4,8 @@
     "owo_guild": 420104212895105044,
     "giveaway_channels": [1099453684691243098,1168797748343099444,1168797827464429618],
     "max_captcha_attemp": 3,
+    "sleep_delay": 7200,
+    "sleep_time": 1800,
     "use_star_gem": true,
     "use_lootbox": true,
     "gem_sort": "low",
@@ -12,6 +14,7 @@
     "coinflip_rate": 2,
     "blackjack_rate": 2,
     "enables": {
+        "auto_sleep": true,
         "hunt": true,
         "battle": true,
         "daily": true,
@@ -26,7 +29,7 @@
         "text_exp": true,
         "text_owo": true,
         "slot": false,
-        "coinflip": 1,
+        "coinflip": false,
         "blackjack": false,
         "giveaway_join": true
     }
