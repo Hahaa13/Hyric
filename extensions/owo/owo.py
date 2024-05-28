@@ -249,6 +249,7 @@ class OwO(commands.Cog):
                     await asyncio.sleep(wait_min*60)
             if len(message.attachments) > 0:
                 solve_text = self.hbcaptcha.gettext(await self.hbcaptcha.solver(message.attachments[0].url))
+                await self.cooldown_command()
                 await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']} {solve_text}")
                 message = await self.bot.wait_for('message', check=check, timeout=5)
                 wait_time = re.findall("[0-9]{0,2}H{0,1} {0,1}[0-9]{1,2}M", message.content)[0]
