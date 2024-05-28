@@ -37,6 +37,7 @@ class Gem:
             self.bot.logger.info("OWO LOOTBOX")
             await self.cooldown_command()
             await channel.send(f"{self.configs['owo_prefix']} inv")
+            self.bot.logger.info("OWO INV")
             message = await self.bot.wait_for("message", check=self._check, timeout=5)
         content = message.content
         for k,v in self.mapping.items():
