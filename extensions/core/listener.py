@@ -3,10 +3,16 @@ import asyncio
 from discord.ext import commands, tasks
 from utils.bot import Bot
 
-class Event(commands.Cog):
+class Listener(commands.Cog):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
-        self.change_channel.start()
+
+    async def cog_load(self):
+        if len(self.bot.configs["channel_ids"]) > 1:
+            self.change_channel.start()
+        else:
+            self.bot.channel = self.bot.get_channel(self.bot.configs["channel_ids"][0])
+            self.bot.logger.info(f"SELECT CHANNEL {self.bot.channel.id}")
 
     @tasks.loop(seconds=3)
     async def change_channel(self):
@@ -17,7 +23,7 @@ class Event(commands.Cog):
                     break
         else:
             self.bot.channel = self.bot.get_channel(self.bot.configs["channel_ids"][0])
-        self.bot.logger.info(f"SELECT CHANNEL {self.bot.channel.id}")
+        self.bot.logger.info(f"SELECT CHANNEL {self.bot.channel.id}. WILL CHANGE IN {self.bot.configs['change_channel_later']}")
         await asyncio.sleep(self.bot.configs["change_channel_later"]*60, self.bot.configs["change_channel_later"]*60+10)
 
     @commands.Cog.listener()
@@ -27,4 +33,4 @@ class Event(commands.Cog):
         raise error
         
 async def setup(bot: Bot):
-    await bot.add_cog(Event(bot))
+    await bot.add_cog(Listener(bot))
