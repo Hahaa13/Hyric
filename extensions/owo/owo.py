@@ -79,12 +79,12 @@ class OwO(commands.Cog):
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🌱 | {self.bot.user.display_name}**" in m.content
             message = await self.bot.wait_for('message', check=check, timeout=5)
+            xp = re.findall("[0-9]{1,99}xp", message.content)[0]
+            self.bot.logger.info(f"OWO HUNT - {xp.upper()}")
             if self.configs["use_gem"]:
                 if not self.gem.ready or (self.configs["use_lootbox"] and ":box:" in message.content):
                     await self.gem.gem_data_collect(self.bot.channel)
                 await self.gem.on_hunt(message)
-            xp = re.findall("[0-9]{1,99}xp", message.content)
-            self.bot.logger.info(f"OWO HUNT - {xp[0].upper()}")
             await asyncio.sleep(random.randint(18,25))
 
     @tasks.loop(seconds=3)
