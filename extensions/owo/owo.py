@@ -276,7 +276,7 @@ class OwO(commands.Cog):
     async def text_owo(self):
         if not self.pause:
             await self.cooldown_command()
-            await self.bot.channel.send("owo")
+            await self.bot.channel.send(random.choice(["OwO", "UwU", "owo", "uwu"]))
             self.bot.logger.info("TEXT OWO")
             await asyncio.sleep(random.randint(30,120))
 
