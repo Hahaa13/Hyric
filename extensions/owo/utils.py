@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 
 class Gem:
-    def __init__(self, bot, configs) -> None:
+    def __init__(self, bot, cooldown_command, configs) -> None:
         """
         self.gems[0] = gem 1
         self.gems[1] = gem 3
@@ -17,6 +17,7 @@ class Gem:
         """
         self.ready = False
         self.bot = bot
+        self.cooldown_command = cooldown_command
         self.configs = configs
         self.gems = [[],[],[],[]]
         self.mapping = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"}
@@ -25,12 +26,13 @@ class Gem:
         return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
 
     async def gem_data_collect(self, channel) -> None:
+        await self.cooldown_command()
         await channel.send(f"{self.configs['owo_prefix']} inv")
         self.bot.logger.info("OWO INVENTORY")
         message = await self.bot.wait_for('message', check=self._check, timeout=5)
         content = message.content
         if "050" in content and self.configs["use_lootbox"]:
-            await asyncio.sleep(12,16)
+            await self.cooldown_command()
             await channel.send(f"{self.configs['owo_prefix']} lb all")
             self.bot.logger.info("OWO LOOTBOX")
             await channel.send(f"{self.configs['owo_prefix']} inv")
@@ -60,6 +62,7 @@ class Gem:
                     del self.gems[count][gem_sort]
             count += 1
         if usegems != [] and self.ready:
+            await self.cooldown_command()
             await message.channel.send(f"{self.configs['owo_prefix']} use " + " ".join(usegems))
             self.bot.logger.info("OWO USE " + " ".join(usegems))
 

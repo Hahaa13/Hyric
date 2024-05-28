@@ -18,7 +18,7 @@ class OwO(commands.Cog):
         self.hbcaptcha = HuntBotCaptcha()
         self.configs = json.load(open("extensions/owo/_configs.json"))
         self.caches = json.load(open("extensions/owo/_caches.json"))
-        self.gem = Gem(bot, self.configs)
+        self.gem = Gem(bot, self.cooldown_command, self.configs)
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
