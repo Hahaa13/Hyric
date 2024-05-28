@@ -35,6 +35,7 @@ class Gem:
             await self.cooldown_command()
             await channel.send(f"{self.configs['owo_prefix']} lb all")
             self.bot.logger.info("OWO LOOTBOX")
+            await self.cooldown_command()
             await channel.send(f"{self.configs['owo_prefix']} inv")
             message = await self.bot.wait_for("message", check=self._check, timeout=5)
         content = message.content
