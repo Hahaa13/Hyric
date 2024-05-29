@@ -28,6 +28,7 @@ class OwO(commands.Cog):
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
                 fuction.start()
+        self.owo_delay_check.start()
 
     def getTimeCooldown(self) -> int:
         test = datetime.datetime.utcnow().replace(hour=7,minute=0,second=0,microsecond=0)
@@ -45,6 +46,18 @@ class OwO(commands.Cog):
             else: self.caches[keys[0]][keys[1]] = True
             json.dump(self.caches, f)
     
+    @tasks.loop(minutes=3)
+    async def owo_delay_check(self):
+        if not (self.captcha and self.pause):
+            async for message in self.bot.channel.history(limit=10):
+                if message.author.id == self.configs["owo_id"]:
+                    break
+            else:
+                self.pause = True
+                self.bot.logger.warning("OWO IS DELAY. BOF WILL SLEEP 10MINS")
+                await asyncio.sleep(600)
+                self.pause = False
+
     @tasks.loop(seconds=3)
     async def sleep(self):
         await asyncio.sleep(self.configs["sleep_delay"])
