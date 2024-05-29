@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://github.com/Hahaa13/Hyric/blob/main/.github/image/H_20240529_114131_0000-removebg-preview.png">
-  <h2 align="center">Hyric</h2>
+  <h1 align="center">Hyric</h1>
 
   <p align="center">
     This project is for educational purposes! Selfbot goes against discord terms. Use it you can be banned from discord at any time.
