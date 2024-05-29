@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Hahaa13/Hyric/blob/main/.github/image/H_20240529_114131_0000-removebg-preview.png">
+  <img src="https://github.com/Hahaa13/Hyric/blob/main/.github/image/logo.png">
   <h1 align="center">Hyric</h1>
 
   <p align="center">
