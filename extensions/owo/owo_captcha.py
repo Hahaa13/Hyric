@@ -31,7 +31,11 @@ class OwO_Captcha(commands.Cog):
                     def check(m) -> bool:
                         return m.author.id == self.owo_user.id and isinstance(m.channel, discord.channel.DMChannel)
                     for _ in range(self.owo.configs["max_captcha_attemp"]):
-                        captcha = self.bot.solver.normal(captcha_url, maxlen=length, minlen=length, numeric=4, case=True)
+                        try:
+                            captcha = self.bot.solver.normal(captcha_url, maxlen=length, minlen=length, numeric=4, case=True)
+                        except Exception as e:
+                            self.bot.logger.error(e)
+                            continue
                         await self.dm_channel.send(captcha["code"])
                         message = await self.bot.wait_for("message", check=check, timeout=10)
                         if "🚫" in message.content:
@@ -44,7 +48,7 @@ class OwO_Captcha(commands.Cog):
                         self.owo.captcha = False
                         return
                 else:
-                    self.bot.logger.info("CAPTCHA - NOT FOUND")
+                    self.bot.logger.info("CAPTCHA - FOUND AND NOT FOUND IMAGE")
                     
 async def setup(bot: Bot) -> None:
     if bot.configs["2captcha_api"] != "":

@@ -27,4 +27,5 @@ async def on_ready():
                 bot.logger.error(e)
         bot.logger.info(f"Load extension {extension}")
 
-bot.run(configs["token"], log_level=logging.INFO)
+if __name__ == "__main__":
+    bot.run(configs["token"], log_level=logging.INFO)

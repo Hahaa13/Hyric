@@ -86,8 +86,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def hunt(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hunt")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🌱 | {self.bot.user.display_name}**" in m.content
@@ -102,18 +102,18 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def battle(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} battle")
             self.bot.logger.info("OWO BATTLE")
             await asyncio.sleep(random.randint(18,25))
 
     @tasks.loop(seconds=3)
     async def daily(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
             if self.caches["checks"]["daily"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} daily")
             timesec = self.getTimeCooldown()
             def check(m) -> bool:
@@ -128,8 +128,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def pray_or_curse(self):
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             poc_user = ""
             if self.configs["pray_or_curse_id"] > 0:
                 poc_user = f"<@{self.configs['pray_or_curse_id']}>"
@@ -139,8 +139,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def sell(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} sell {self.configs['enables']['sell']}")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🔪 | {self.bot.user.display_name}** sold" in m.content
@@ -151,8 +151,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def sac(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} sac {self.configs['enables']['sac']}")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🔪 | {self.bot.user.display_name}** sacrificed" in m.content
@@ -163,10 +163,10 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def cookie(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
             if self.caches["checks"]["cookie"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} cookie <@{self.configs['enables']['cookie']}>")
             self.bot.logger.info(f"OWO COOKIE {self.configs['enables']['cookie']}")
             self.addCache("cookie")
@@ -174,10 +174,10 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def run(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
             if self.caches["checks"]["run"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} run")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "run" in m.content
@@ -193,10 +193,10 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def pup(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
             if self.caches["checks"]["pup"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} pup")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "pup" in m.content
@@ -212,10 +212,10 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def piku(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
             if self.caches["checks"]["piku"]:
                 await asyncio.sleep(self.getTimeCooldown() + 10)
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} piku")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "carrot" in m.content
@@ -231,8 +231,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def huntbot(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']}")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "bot:" in m.content
@@ -263,6 +263,8 @@ class OwO(commands.Cog):
                     await asyncio.sleep(wait_min*60)
             if len(message.attachments) > 0:
                 solve_text = self.hbcaptcha.gettext(await self.hbcaptcha.solver(message.attachments[0].url))
+                while self.captcha:
+                    await asyncio.sleep(10)
                 await self.cooldown_command()
                 await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']} {solve_text}")
                 message = await self.bot.wait_for('message', check=check, timeout=5)
@@ -275,8 +277,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def text_exp(self):
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"https://fakerapi.it/api/v1/texts?_quantity=1?&_characters={random.randint(25,150)}") as resp:
                     dt = await resp.json()
@@ -287,8 +289,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def text_owo(self):
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(random.choice(["OwO", "UwU", "owo", "uwu"]))
             self.bot.logger.info("TEXT OWO")
             await asyncio.sleep(random.randint(30,120))
@@ -322,8 +324,8 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def coinflip(self) -> None:
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} cf {self.coinflip_cow}")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
@@ -340,8 +342,8 @@ class OwO(commands.Cog):
     
     @tasks.loop(seconds=3)
     async def slot(self):
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} slot {self.slot_cow}")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
@@ -359,8 +361,8 @@ class OwO(commands.Cog):
     
     @tasks.loop(seconds=3)
     async def blackjack(self):
+        await self.cooldown_command()
         if not self.pause:
-            await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} bj {self.blackjack_cow}")
             def check(m) -> bool:
                 return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and len(m.embeds) == 1 and self.bot.user.name in m.embeds[0].author.name
