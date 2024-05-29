@@ -1,16 +1,6 @@
-# Hyric
-## Extensions
-**OwO**
-- Auto Hunt
-- Auto Use Hunt Gem
-- Auto Battle
-- Auto Pray/Curse
-- Auto Daily
-- Auto Cookie
-- Auto Sell/Sac
-- Auto Join Giveaway
-- Auto HuntBot
-- Auto Run
-- Auto Pup
-- Auto Piku
-- Captcha Image Solve
+<h3 align="center">Hyric</h3>
+
+<p align="center">
+  This project is for educational purposes! Selfbot goes against discord terms. Use it you can be banned from discord at any time.
+</p>
+
