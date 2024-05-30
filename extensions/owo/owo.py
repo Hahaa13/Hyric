@@ -42,10 +42,9 @@ class OwO(commands.Cog):
                 await asyncio.sleep(3)
             await asyncio.sleep(random.randint(3,5))
 
-    def addCache(self, *keys) -> None:
+    def addCache(self, key) -> None:
+        self.caches["checks"][key] = True
         with open("extensions/owo/_caches.json", "w") as f:
-            if len(keys) < 2: self.caches["checks"][keys[0]] = True
-            else: self.caches[keys[0]][keys[1]] = True
             json.dump(self.caches, f)
     
     @tasks.loop(minutes=3)
