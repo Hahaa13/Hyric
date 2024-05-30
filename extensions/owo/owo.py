@@ -58,7 +58,9 @@ class OwO(commands.Cog):
                     await self.bot.channel.send(f"{self.configs['owo_prefix']} help")
                     def check(m) -> bool:
                         return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "🏓" in m.content
-                    if await self.bot.wait_for("message", check=check, timeout=3):
+                    try:
+                        await self.bot.wait_for("message", check=check, timeout=3)
+                    except asyncio.TimeoutError:
                         return
                 self.pause = True
                 self.bot.logger.warning("OWO IS DELAY. BOF WILL SLEEP 10MINS")
