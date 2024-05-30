@@ -61,8 +61,7 @@ class OwO(commands.Cog):
                     try:
                         await self.bot.wait_for("message", check=check, timeout=3)
                         return
-                    except asyncio.TimeoutError or TimeoutError:
-                        pass
+                    except asyncio.TimeoutError or TimeoutError: pass
                 self.pause = True
                 self.bot.logger.warning("OWO IS DELAY. BOF WILL SLEEP 10MINS")
                 await asyncio.sleep(600)
