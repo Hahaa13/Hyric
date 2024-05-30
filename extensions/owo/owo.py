@@ -298,19 +298,21 @@ class OwO(commands.Cog):
                 async for message in channel.history(limit=5):
                     if len(message.components) > 0 and message.author.id == self.configs["owo_id"] and not message.id in self.caches["giveaway_join"]:
                         if isinstance(message.components[0], discord.ActionRow):
-                            for cd in message.components[0].children:
-                                if isinstance(cd, discord.Button) and not cd.disabled:
-                                    await cd.click()
-                                    self.caches["giveaway_join"].append(message.id)
-                                    self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
-        with open("extensions/owo/_caches.json", "w") as f:
-            json.dump(self.caches, f)
+                            cd = message.components[0].children[0]
+                            if isinstance(cd, discord.Button) and not cd.disabled:
+                                await cd.click()
+                                self.caches["giveaway_join"].append(message.id)
+                                self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
+                                with open("extensions/owo/_caches.json", "w") as f:
+                                    json.dump(self.caches, f)
+                                self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
 
     @commands.Cog.listener()
     async def on_message(self, message) -> None:
         if message.channel.id in self.configs["giveaway_channels"]:
             if len(message.components) > 0 and message.author.id == self.configs["owo_id"] and not message.id in self.caches["giveaway_join"]:
                 if isinstance(message.components[0], discord.ActionRow):
+                    cd = message.components[0].children[0]
                     if isinstance(cd, discord.Button) and not cd.disabled:
                         await cd.click()
                         self.caches["giveaway_join"] = self.caches["giveaway_join"].append(message.id)
