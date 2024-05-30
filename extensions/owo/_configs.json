@@ -16,6 +16,7 @@
     "blackjack_rate": 2,
     "enables": {
         "auto_sleep": true,
+        "delay_check": true,
         "hunt": true,
         "battle": true,
         "daily": true,

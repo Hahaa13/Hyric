@@ -22,13 +22,12 @@ class OwO(commands.Cog):
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
-        fuctions = [self.sleep, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack]
-        enables = ["auto_sleep", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot", "blackjack"]
+        fuctions = [self.sleep, self.owo_delay_check, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack]
+        enables = ["auto_sleep", "delay_check", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot", "blackjack"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
                 fuction.start()
-        self.owo_delay_check.start()
 
     def getTimeCooldown(self) -> int:
         test = datetime.datetime.utcnow().replace(hour=7,minute=0,second=0,microsecond=0)
