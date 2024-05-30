@@ -15,12 +15,13 @@ class OwO_Captcha(commands.Cog):
             self.dm_channel = await self.owo_user.create_dm()
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message) -> None:
         if self.owo_user.id == message.author.id:
             if "https://owobot.com/captcha" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
                 self.owo.pause = True
                 self.owo.captcha = True
                 self.bot.logger.info("CAPTCHA LINK FOUND")
+                return
             elif "⚠️" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
                 self.owo.pause = True
                 self.owo.captcha = True
@@ -49,6 +50,7 @@ class OwO_Captcha(commands.Cog):
                         return
                 else:
                     self.bot.logger.info("CAPTCHA - FOUND AND NOT FOUND IMAGE")
+                    return
                     
 async def setup(bot: Bot) -> None:
     if bot.configs["2captcha_api"] != "":
