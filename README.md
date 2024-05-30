@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Hahaa13/Hyric/blob/main/.github/image/logo.png">
+  <img src="https://github.com/Hahaa13/Hyric/blob/main/.github/image/logo.png?raw=true">
   <h1 align="center">Hyric</h1>
 
   <p align="center">
@@ -10,4 +10,5 @@
   [![License](https://img.shields.io/github/license/hahaa13/hyric)](LICENSE)
   [![Discord](https://img.shields.io/discord/1242409478721245184?logo=discord&logoColor=white&color=5865F2
 )](https://discord.com/invite/nsX2kQJrEM)
+  [![Wiki](https://img.shields.io/badge/Wiki-Hyric-blue)](https://github.com/Hahaa13/Hyric/wiki)
 </div>
