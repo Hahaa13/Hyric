@@ -22,8 +22,8 @@ class OwO(commands.Cog):
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
-        fuctions = [self.sleep, self.owo_delay_check, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.huntbot, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack]
-        enables = ["auto_sleep", "delay_check", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "huntbot", "text_exp", "text_owo", "coinflip", "slot", "blackjack"]
+        fuctions = [self.sleep, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack, self.owo_delay_check, self.huntbot]
+        enables = ["auto_sleep", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "text_exp", "text_owo", "coinflip", "slot", "blackjack", "delay_check", "huntbot"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
@@ -53,6 +53,13 @@ class OwO(commands.Cog):
                 if message.author.id == self.configs["owo_id"]:
                     break
             else:
+                if self.configs["better_delay_check"]:
+                    await self.cooldown_command()
+                    await self.bot.channel.send(f"{self.configs['owo_prefix']} help")
+                    def check(m) -> bool:
+                        return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "🏓" in m.content
+                    if await self.bot.wait_for("message", check=check, timeout=3):
+                        return
                 self.pause = True
                 self.bot.logger.warning("OWO IS DELAY. BOF WILL SLEEP 10MINS")
                 await asyncio.sleep(600)
