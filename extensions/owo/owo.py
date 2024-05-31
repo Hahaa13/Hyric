@@ -283,14 +283,14 @@ class OwO(commands.Cog):
                 if dt["status"] == "OK":
                     await self.bot.channel.send(dt["data"][0]["content"])
                     self.bot.logger.info("OWO RANDOM TEXT EXP")
-        await asyncio.sleep(random.randint(30,120))
+        await asyncio.sleep(random.randint(60, 120))
 
     @tasks.loop(seconds=3)
     async def text_owo(self):
         await self.cooldown_command()
         await self.bot.channel.send(random.choice(["OwO", "UwU", "owo", "uwu"]))
         self.bot.logger.info("TEXT OWO")
-        await asyncio.sleep(random.randint(30,120))
+        await asyncio.sleep(random.randint(60,120))
 
     async def cog_load(self) -> None:
         for c in self.configs["giveaway_channels"]:

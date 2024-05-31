@@ -9,11 +9,11 @@ class OwO_Captcha(commands.Cog):
         self.bot = bot
         self.owo = self.bot.get_cog("OwO")
         self.owo_user = self.bot.get_user(self.owo.configs["owo_id"])
-        #self.dm_channel = self.owo_user.dm_channel
+        self.dm_channel = self.owo_user.dm_channel
 
-    #async def cog_load(self):
-        #if self.dm_channel is None:
-            #self.dm_channel = await self.owo_user.create_dm()
+    async def cog_load(self):
+        if self.dm_channel is None:
+            self.dm_channel = await self.owo_user.create_dm()
 
     @commands.Cog.listener()
     async def on_message(self, message) -> None:
