@@ -302,7 +302,6 @@ class OwO(commands.Cog):
                             if isinstance(cd, discord.Button) and not cd.disabled:
                                 await cd.click()
                                 self.caches["giveaway_join"].append(message.id)
-                                self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
                                 with open("extensions/owo/_caches.json", "w") as f:
                                     json.dump(self.caches, f)
                                 self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
