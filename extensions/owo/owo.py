@@ -51,6 +51,7 @@ class OwO(commands.Cog):
         if not (self.captcha and self.pause):
             async for message in self.bot.channel.history(limit=10):
                 if message.author.id == self.configs["owo_id"]:
+                    self.bot.logger.info("OWO DELAY CHECK - ONLINE")
                     break
             else:
                 if self.configs["better_delay_check"]:

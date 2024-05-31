@@ -24,17 +24,5 @@ class Commands(commands.Cog):
         content = f"```⏰Uptime: {strfdelta((datetime.utcnow() - self.bot.time_onload), '%H:%M:%S')}```"
         await ctx.send(content)
 
-    @commands.command()
-    async def reload(self, ctx, d: str) -> None:
-        d = d.lower()
-        if d.startswith("extensions."):
-            try:
-                self.bot.reload_extension(d)
-                await ctx.send(f"```✅Reload Success {d}```")
-            except Exception as e:
-                self.bot.logger.warning(f"Reload Error {d}: {e}")
-                await ctx.send(f"```❌Reload Failed {f}, please check console```")
-            return
-
 async def setup(bot: Bot):
     await bot.add_cog(Commands(bot))

@@ -2,17 +2,18 @@ import re
 import discord
 from discord.ext import commands
 from utils.bot import Bot
+from utils.captcha_handler import CaptchaSolverNormal
 
 class OwO_Captcha(commands.Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
         self.owo = self.bot.get_cog("OwO")
         self.owo_user = self.bot.get_user(self.owo.configs["owo_id"])
-        self.dm_channel = self.owo_user.dm_channel
+        #self.dm_channel = self.owo_user.dm_channel
 
-    async def cog_load(self):
-        if self.dm_channel is None:
-            self.dm_channel = await self.owo_user.create_dm()
+    #async def cog_load(self):
+        #if self.dm_channel is None:
+            #self.dm_channel = await self.owo_user.create_dm()
 
     @commands.Cog.listener()
     async def on_message(self, message) -> None:
@@ -32,19 +33,18 @@ class OwO_Captcha(commands.Cog):
                     def check(m) -> bool:
                         return m.author.id == self.owo_user.id and isinstance(m.channel, discord.channel.DMChannel)
                     for _ in range(self.owo.configs["max_captcha_attemp"]):
-                        try:
-                            captcha = self.bot.solver.normal(captcha_url, maxlen=length, minlen=length, numeric=4, case=True)
-                        except Exception as e:
-                            self.bot.logger.error(e)
-                            continue
-                        await self.dm_channel.send(captcha["code"])
+                        captcha = CaptchaSolverNormal(captcha_url, self.bot, maxlen=length, minlen=length, numeric=4, case=True)
+                        if not captcha.work:
+                            self.bot.logger.warning("CAPTCHA NOT SOLVED")
+                            break
+                        await self.dm_channel.send(captcha.getresult())
                         message = await self.bot.wait_for("message", check=check, timeout=10)
                         if "🚫" in message.content:
-                            self.bot.solver.report(captcha["captchaId"], False)
-                            self.bot.logger.warning("CAPTCHA - ERROR")
+                            captcha.report(False)
+                            self.bot.logger.warning("CAPTCHA FAILED")
                             continue
-                        self.bot.solver.report(captcha["captchaId"], True)
-                        self.bot.logger.info(f"CAPTCHA - SLOVED CODE: {captcha['code']}")
+                        captcha.report(True)
+                        self.bot.logger.info(f"CAPTCHA - SLOVED CODE: {captcha.getresult()}")
                         self.owo.pause = False
                         self.owo.captcha = False
                         return
@@ -53,5 +53,4 @@ class OwO_Captcha(commands.Cog):
                     return
                     
 async def setup(bot: Bot) -> None:
-    if bot.configs["2captcha_api"] != "":
-        await bot.add_cog(OwO_Captcha(bot))
+    await bot.add_cog(OwO_Captcha(bot))
