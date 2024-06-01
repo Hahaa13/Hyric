@@ -22,12 +22,14 @@ class OwO_Captcha(commands.Cog):
                 self.owo.pause = True
                 self.owo.captcha = True
                 self.bot.logger.info("CAPTCHA LINK FOUND")
+                await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA LINK FOUND", ping=True)
                 return
             elif "⚠️" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
                 self.owo.pause = True
                 self.owo.captcha = True
                 if len(message.attachments) > 0:
                     self.bot.logger.info("CAPTCHA IMAGE FOUND")
+                    await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA IMAGE FOUND", ping=True)
                     captcha_url = message.attachments[0].url
                     length = int(re.findall("[0-9] letter", message.content)[0].replace(" letter", ""))
                     def check(m) -> bool:
@@ -42,14 +44,16 @@ class OwO_Captcha(commands.Cog):
                         if "🚫" in message.content:
                             captcha.report(False)
                             self.bot.logger.warning("CAPTCHA FAILED")
+                            await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA FAILED")
                             continue
                         captcha.report(True)
                         self.bot.logger.info(f"CAPTCHA - SLOVED CODE: {captcha.getresult()}")
+                        await self.bot.webhook.send(self.bot.user, f"OWO CAPTCHA SOLVED CODE: {captcha.getresult()}")
                         self.owo.pause = False
                         self.owo.captcha = False
                         return
                 else:
-                    self.bot.logger.info("CAPTCHA - FOUND AND NOT FOUND IMAGE")
+                    self.bot.logger.info("CAPTCHA - FOUND AND NO IMAGE")
                     return
                     
 async def setup(bot: Bot) -> None:

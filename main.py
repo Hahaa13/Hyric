@@ -2,7 +2,6 @@ import os
 import glob
 import discord
 import logging
-import threading
 import json
 from utils.bot import Bot
 

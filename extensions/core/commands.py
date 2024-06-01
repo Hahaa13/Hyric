@@ -1,4 +1,3 @@
-import sys
 import json
 from datetime import datetime
 from discord.ext import commands
@@ -14,15 +13,13 @@ class Commands(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx) -> None:
-        await ctx.send("🧨STOP BOT")
-        await ctx.send("⚠️If you use Pterodactyl panel, the bot may restart automatically. Please check carefully")
+        await self.bot.webhook.send(self.bot.user, "🔴STOP BOT", "⚠️IF YOU USE PTERODACTYL PANEL, THE BOT MAY RESTART AUTOMATICALLY. PLEASE CHECK CAREFULLY")
         await self.bot.close()
-        sys.exit(1) 
+        exit()
 
     @commands.command()
     async def uptime(self, ctx) -> None:
-        content = f"```⏰Uptime: {strfdelta((datetime.utcnow() - self.bot.time_onload), '%H:%M:%S')}```"
-        await ctx.send(content)
+        await self.bot.webhook.send(self.bot.user, "⏰Uptime", f"Current uptime is {strfdelta((datetime.utcnow() - self.bot.time_onload), '%H:%M:%S')}")
 
 async def setup(bot: Bot):
     await bot.add_cog(Commands(bot))
