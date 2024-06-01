@@ -8,7 +8,7 @@
     "sleep_time": 1800,
     "better_delay_check": true,
     "use_gem": true,
-    "use_star_gem": true,
+    "use_star_gem": false,
     "use_lootbox": true,
     "gem_sort": "low",
     "pray_or_curse_id": false,

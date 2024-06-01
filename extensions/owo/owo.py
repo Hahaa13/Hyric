@@ -90,7 +90,7 @@ class OwO(commands.Cog):
                 for k in self.caches["checks"].keys():
                     self.caches["checks"][k] = False
                 with open("extensions/owo/_caches.json", "w") as f:
-                    json.dump(self.caches, f, indent=4)
+                    json.dump(self.caches, f)
                 return
         await asyncio.sleep(self.getTimeCooldown())
 
@@ -315,9 +315,9 @@ class OwO(commands.Cog):
                     cd = message.components[0].children[0]
                     if isinstance(cd, discord.Button) and not cd.disabled:
                         await cd.click()
-                        self.caches["giveaway_join"] = self.caches["giveaway_join"].append(message.id)
+                        self.caches["giveaway_join"].append(message.id)
                         with open("extensions/owo/_caches.json", "w") as f:
-                            json.dump(self.owo.caches, f)
+                            json.dump(self.caches, f)
                         self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
 
     @tasks.loop(seconds=3)
