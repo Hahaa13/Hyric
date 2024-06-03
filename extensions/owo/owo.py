@@ -83,8 +83,8 @@ class OwO(commands.Cog):
     async def cachemanager(self) -> None:
         now = datetime.datetime.utcnow()
         old = datetime.datetime.fromtimestamp(self.caches["time"])
-        if (old.hour < 7 or now.day > old.day) or now.month > old.month or now.year > old.year:
-            if now.hour >= 7 or now.day - old.day > 2:
+        if old.hour < 7 or now.day > old.day or now.month > old.month or now.year > old.year:
+            if now.hour >= 7 or now.day - old.day > 1:
                 self.bot.logger.info("RESET CACHES")
                 self.caches["time"] = now.timestamp()
                 for k in self.caches["checks"].keys():

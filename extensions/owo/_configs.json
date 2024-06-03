@@ -6,6 +6,7 @@
     "max_captcha_attemp": 3,
     "sleep_delay": 7200,
     "sleep_time": 1800,
+    "auto_join_battle": "accept",
     "better_delay_check": true,
     "use_gem": true,
     "use_star_gem": false,
