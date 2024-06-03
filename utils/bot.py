@@ -10,6 +10,7 @@ class Bot(commands.Bot):
         self.time_onload = datetime.utcnow()
         self.webhook = BotWebhook(configs["webhook_url"])
         self.logger = logging.getLogger("discord")
+        self.logger.addHandler(logging.FileHandler(filename='latest.log', encoding='utf-8', mode='w'))
         super().__init__(*args, **kwargs)
 
     async def close(self) -> None:
