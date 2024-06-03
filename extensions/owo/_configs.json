@@ -35,6 +35,7 @@
         "slot": false,
         "coinflip": false,
         "blackjack": false,
+        "buy": false,
         "giveaway_join": true
     }
 }

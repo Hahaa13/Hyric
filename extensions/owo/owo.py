@@ -22,8 +22,8 @@ class OwO(commands.Cog):
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
         self.blackjack_cow = self.configs["enables"]["blackjack"] if self.configs["enables"]["blackjack"] else 0
-        fuctions = [self.sleep, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack, self.owo_delay_check, self.huntbot]
-        enables = ["auto_sleep", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "text_exp", "text_owo", "coinflip", "slot", "blackjack", "delay_check", "huntbot"]
+        fuctions = [self.sleep, self.hunt, self.battle, self.daily, self.pray_or_curse, self.sell, self.sac, self.cookie, self.run, self.pup, self.piku, self.text_exp, self.text_owo, self.coinflip, self.slot, self.blackjack, self.buy, self.owo_delay_check, self.huntbot]
+        enables = ["auto_sleep", "hunt", "battle", "daily", "pray_or_curse", "sell", "sac", "cookie", "run", "pup", "piku", "text_exp", "text_owo", "coinflip", "slot", "blackjack", "buy", "delay_check", "huntbot"]
         self.cachemanager.start()
         for fuction, enable in zip(fuctions, enables):
             if self.configs["enables"][enable]:
@@ -115,6 +115,14 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} battle")
         self.bot.logger.info("OWO BATTLE")
         await asyncio.sleep(random.randint(18,25))
+    
+    @commands.Cog.listener("on_message")
+    async def on_message_1(self, message) -> None:
+        if self.configs["auto_join_battle"]:
+            if message.author.id == self.configs["owo_id"] and f"<@{self.bot.user.id}>" == message.content and len(message.components) == 2 and len(message.embeds) > 0:
+                cd = message.components[0].children[0] if self.configs["auto_battle_join"].lower == "accept" else message.components[0].children[1]
+                await cd.click()
+                self.bot.logger.info(f"JOIN BATTLE {message.id}")
 
     @tasks.loop(seconds=3)
     async def daily(self) -> None:
@@ -389,6 +397,14 @@ class OwO(commands.Cog):
                 self.bot.logger.warning(f"OWO BLACKJACK ERROR NOT FOUND")
                 break
         await asyncio.sleep(random.randint(18,25))
+
+    @tasks.loop(seconds=3)
+    async def buy(self) -> None:
+        await self.cooldown_command()
+        bi = random.choice(self.configs["enables"]["buy"])
+        await self.bot.channel.send(f"{self.configs['owo_prefix']} buy {bi}")
+        self.bot.logger.info(f"OWO BUY {bi}")
+        await asyncio.sleep(18,25)
 
 async def setup(bot: Bot) -> None:
     await bot.add_cog(OwO(bot))

@@ -12,7 +12,7 @@ class BotWebhook:
         if self.webhook_url:
             embed = Embed(title=title, description=description, colour=colour)
             embed.set_author(name=user.display_name, icon_url=user.display_avatar.url)
+            content = f"<@{user.id}>" if ping else None
             async with ClientSession() as session:
                 wbh = Webhook.from_url(self.webhook_url, session=session)
-                if ping: await wbh.send(f"<@{user.id}>")
-                await wbh.send(embed=embed)
+                await wbh.send(content=content, embed=embed)
