@@ -1,7 +1,6 @@
 import os
 import glob
 import discord
-import logging
 import json
 from utils.bot import Bot
 
@@ -11,7 +10,7 @@ bot = Bot(command_prefix=configs["command_prefixs"], configs=configs, self_bot=T
 
 @bot.event
 async def on_ready():
-    bot.logger.info("""
+    print("""
 ██╗  ██╗██╗   ██╗██████╗ ██╗ ██████╗
 ██║  ██║╚██╗ ██╔╝██╔══██╗██║██╔════╝
 ███████║ ╚████╔╝ ██████╔╝██║██║     
@@ -27,4 +26,4 @@ async def on_ready():
         bot.logger.info(f"Load extension {extension}")
 
 if __name__ == "__main__":
-    bot.run(configs["token"], log_level=logging.INFO)
+    bot.run(configs["token"])
