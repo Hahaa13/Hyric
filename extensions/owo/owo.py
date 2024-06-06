@@ -119,8 +119,8 @@ class OwO(commands.Cog):
     @commands.Cog.listener("on_message")
     async def on_message_1(self, message) -> None:
         if self.configs["auto_join_battle"]:
-            if message.author.id == self.configs["owo_id"] and f"<@{self.bot.user.id}>" == message.content and len(message.components) == 2 and len(message.embeds) > 0:
-                cd = message.components[0].children[0] if self.configs["auto_battle_join"].lower == "accept" else message.components[0].children[1]
+            if message.author.id == self.configs["owo_id"] and f"<@{self.bot.user.id}>" == message.content and len(message.components) == 1 and len(message.embeds) > 0:
+                cd = message.components[0].children[0] if self.configs["auto_join_battle"].lower() == "accept" else message.components[0].children[1]
                 await cd.click()
                 self.bot.logger.info(f"JOIN BATTLE {message.id}")
 
@@ -242,7 +242,7 @@ class OwO(commands.Cog):
         await self.cooldown_command()
         await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']}")
         def check(m) -> bool:
-            return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "bot:" in m.content
+            return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and ("bot:" in m.content or "password" in m.content)
         message = await self.bot.wait_for('message', check=check, timeout=5)
         if "|** `BEEP BOOP. I AM BACK WITH" in message.content:
             self.bot.logger.info("OWO HUNTBOT CLAIMED")

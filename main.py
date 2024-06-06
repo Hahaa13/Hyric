@@ -10,13 +10,14 @@ bot = Bot(command_prefix=configs["command_prefixs"], configs=configs, self_bot=T
 
 @bot.event
 async def on_ready():
-    print("""
-██╗  ██╗██╗   ██╗██████╗ ██╗ ██████╗
-██║  ██║╚██╗ ██╔╝██╔══██╗██║██╔════╝
-███████║ ╚████╔╝ ██████╔╝██║██║     
-██╔══██║  ╚██╔╝  ██╔══██╗██║██║     
-██║  ██║   ██║   ██║  ██║██║╚██████╗
-╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝ ╚═════╝""")
+    print("██╗  ██╗██╗   ██╗██████╗ ██╗ ██████╗")
+    print("██║  ██║╚██╗ ██╔╝██╔══██╗██║██╔════╝")
+    print("███████║ ╚████╔╝ ██████╔╝██║██║     ")
+    print("██╔══██║  ╚██╔╝  ██╔══██╗██║██║     ")
+    print("██║  ██║   ██║   ██║  ██║██║╚██████╗")
+    print("╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝ ╚═════╝")
+    print("Thanks aduck(ahihiyou20) and conan(edogawa_conan00) support me")
+    print("Hyric is free 100% and open source")
     for extension in glob.glob("extensions/**"):
         for extension_file in sorted(glob.glob(f"{extension}/**/*.py", recursive=True)):
             try:
