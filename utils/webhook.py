@@ -5,8 +5,9 @@ from discord import User
 from discord import Webhook
 
 class BotWebhook:
-    def __init__(self, url) -> None:
+    def __init__(self, url, logger) -> None:
         self.webhook_url = url
+        self.logger = logger
     
     async def send(self, user: User, title: str = None, description: str = None, ping: bool = False, colour: Colour = Colour.random()) -> None:
         if self.webhook_url:
@@ -16,3 +17,5 @@ class BotWebhook:
             async with ClientSession() as session:
                 wbh = Webhook.from_url(self.webhook_url, session=session)
                 await wbh.send(content=content, embed=embed)
+            return
+        self.logger.warning("WEBHOOK NOT FOUND AND MESSAGE WILL NOT SEND")
