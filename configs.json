@@ -1,10 +1,15 @@
 {
-    "token": "",
-    "channel_ids": [1238460878597259267],
-    "command_prefixs": ["sb!"],
+    "accounts": [
+        {
+            "token": "",
+            "channel_ids": [],
+            "command_prefixs": ["sb!"]
+        }
+    ],
     "change_channel_later": 30,
     "webhook_url": "",
     "user_allow_commands": [],
+    "user_ping_webhook": [],
     "captcha_solvers": [
         {
             "enable": false,

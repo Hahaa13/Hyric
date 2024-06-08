@@ -17,7 +17,7 @@ class OwO(commands.Cog):
         self.lock = asyncio.Lock()
         self.hbcaptcha = HuntBotCaptcha()
         self.configs = json.load(open("extensions/owo/_configs.json"))
-        self.caches = json.load(open("extensions/owo/_caches.json"))
+        self.caches = json.load(open(f"extensions/owo/caches/{self.bot.user.id}_cache.json")) if os.path.exists(f"extensions/owo/caches/{self.bot.user.id}_cache.json") else {"time": 0, "giveaway_join": [], "checks": {"daily": False, "cookie": False, "run": False, "pup": False, "piku": False}}
         self.gem = Gem(bot, self.cooldown_command, self.configs)
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
@@ -43,7 +43,7 @@ class OwO(commands.Cog):
 
     def addCache(self, key) -> None:
         self.caches["checks"][key] = True
-        with open("extensions/owo/_caches.json", "w") as f:
+        with open(f"extensions/owo/caches/{self.bot.user.id}_cache.json", "w") as f:
             json.dump(self.caches, f)
     
     @tasks.loop(minutes=3)
@@ -89,7 +89,7 @@ class OwO(commands.Cog):
                 self.caches["time"] = now.timestamp()
                 for k in self.caches["checks"].keys():
                     self.caches["checks"][k] = False
-                with open("extensions/owo/_caches.json", "w") as f:
+                with open(f"extensions/owo/caches/{self.bot.user.id}_cache.json", "w") as f:
                     json.dump(self.caches, f)
                 return
         await asyncio.sleep(self.getTimeCooldown())
@@ -126,9 +126,9 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def daily(self) -> None:
-        await self.cooldown_command()
         if self.caches["checks"]["daily"]:
             await asyncio.sleep(self.getTimeCooldown() + 10)
+        await self.cooldown_command()
         await self.bot.channel.send(f"{self.configs['owo_prefix']} daily")
         timesec = self.getTimeCooldown()
         def check(m) -> bool:
@@ -175,9 +175,9 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def cookie(self) -> None:
-        await self.cooldown_command()
         if self.caches["checks"]["cookie"]:
             await asyncio.sleep(self.getTimeCooldown() + 10)
+        await self.cooldown_command()
         await self.bot.channel.send(f"{self.configs['owo_prefix']} cookie <@{self.configs['enables']['cookie']}>")
         self.bot.logger.info(f"OWO COOKIE {self.configs['enables']['cookie']}")
         self.addCache("cookie")
@@ -185,9 +185,9 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def run(self) -> None:
-        await self.cooldown_command()
         if self.caches["checks"]["run"]:
             await asyncio.sleep(self.getTimeCooldown() + 10)
+        await self.cooldown_command()
         await self.bot.channel.send(f"{self.configs['owo_prefix']} run")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "run" in m.content
@@ -203,9 +203,9 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def pup(self) -> None:
-        await self.cooldown_command()
         if self.caches["checks"]["pup"]:
             await asyncio.sleep(self.getTimeCooldown() + 10)
+        await self.cooldown_command()
         await self.bot.channel.send(f"{self.configs['owo_prefix']} pup")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "pup" in m.content
@@ -221,9 +221,9 @@ class OwO(commands.Cog):
 
     @tasks.loop(seconds=3)
     async def piku(self) -> None:
-        await self.cooldown_command()
         if self.caches["checks"]["piku"]:
             await asyncio.sleep(self.getTimeCooldown() + 10)
+        await self.cooldown_command()
         await self.bot.channel.send(f"{self.configs['owo_prefix']} piku")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "carrot" in m.content
@@ -311,7 +311,7 @@ class OwO(commands.Cog):
                             if isinstance(cd, discord.Button) and not cd.disabled:
                                 await cd.click()
                                 self.caches["giveaway_join"].append(message.id)
-                                with open("extensions/owo/_caches.json", "w") as f:
+                                with open(f"extensions/owo/caches/{self.bot.user.id}_cache.json", "w") as f:
                                     json.dump(self.caches, f)
                                 self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
 
@@ -324,7 +324,7 @@ class OwO(commands.Cog):
                     if isinstance(cd, discord.Button) and not cd.disabled:
                         await cd.click()
                         self.caches["giveaway_join"].append(message.id)
-                        with open("extensions/owo/_caches.json", "w") as f:
+                        with open(f"extensions/owo/caches/{self.bot.user.id}_cache.json", "w") as f:
                             json.dump(self.caches, f)
                         self.bot.logger.info(f"JOIN GIVEAWAY {message.id}")
 
