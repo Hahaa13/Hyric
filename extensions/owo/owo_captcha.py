@@ -53,7 +53,7 @@ class OwO_Captcha(commands.Cog):
                         return m.author.id == self.owo_user.id and isinstance(m.channel, discord.channel.DMChannel)
                     captcha = CaptchaSolverNormal(message.attachments[0].url, self.bot.configs, self.bot.logger)
                     for retry in range(self.owo.configs["max_captcha_attemp"]):
-                        captcha.solver(maxlen=length, minlen=length)
+                        captcha.solver(length, length)
                         if not captcha.work:
                             self.bot.logger.warning("CAPTCHA NOT SOLVED")
                             break

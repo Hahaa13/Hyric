@@ -6,6 +6,7 @@ import threading
 import logging
 import json
 from utils.bot import Bot
+from utils.webhook import BotWebhook
 
 print("██╗  ██╗██╗   ██╗██████╗ ██╗ ██████╗")
 print("██║  ██║╚██╗ ██╔╝██╔══██╗██║██╔════╝")
@@ -26,6 +27,7 @@ def runbot(bot, token):
     @bot.event
     async def on_ready():
         bot.logger = logging.getLogger(bot.user.display_name)
+        bot.webhook = BotWebhook(bot.configs, bot.logger)
         logfile = logging.FileHandler(f"logs/log_{bot.user.display_name}.log", "w", "utf-8")
         logfile.setFormatter(logging.Formatter(f"{bot.user.display_name} - %(levelname)s - %(message)s"))
         bot.logger.addHandler(logfile)
@@ -44,7 +46,7 @@ for account in configs["accounts"]:
     thread = threading.Thread(target=runbot, daemon=True, args=(bot, account["token"]))
     thread.start()
     threads.append(thread)
-    time.sleep(0.3)
+    time.sleep(0.5)
 
 for therad in threads: 
     therad.join()

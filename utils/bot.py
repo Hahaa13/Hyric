@@ -9,5 +9,5 @@ class Bot(commands.Bot):
         self.channel = None
         self.time_onload = datetime.utcnow()
         self.logger = None
-        self.webhook = BotWebhook(configs["webhook_url"], self.configs, self.logger)
+        self.webhook = None
         super().__init__(*args, **kwargs)

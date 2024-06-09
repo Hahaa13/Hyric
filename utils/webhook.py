@@ -5,8 +5,8 @@ from discord import User
 from discord import Webhook
 
 class BotWebhook:
-    def __init__(self, url, configs: dict, logger) -> None:
-        self.webhook_url = url
+    def __init__(self, configs: dict, logger) -> None:
+        self.webhook_url = configs["webhook_url"]
         self.logger = logger
         self.configs = configs
     

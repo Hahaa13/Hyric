@@ -3,19 +3,20 @@ from twocaptcha import TwoCaptcha
 
 class CaptchaSolverNormal:
     def __init__(self, captcha_url: str, configs: dict, logger) -> None:
+        self.captcha_url = captcha_url
         self.configs = configs
         self.logger = logger
         self.solver_name = None
         self.result = None
         self.work = False
     
-    def solver(minlen: int, maxlen: int, numeric: int = 4, case: bool = True) -> None:
+    def solver(self, minlen: int, maxlen: int, numeric: int = 4, case: bool = True) -> None:
         for captcha_solver in self.configs["captcha_solvers"]:
             if captcha_solver["enable"]:
                 if captcha_solver["name"] == "2captcha":
                     try:
                         solver = TwoCaptcha(captcha_solver["api_key"])
-                        self.result = solver.normal(captcha_url, minlen=minlen, maxlen=maxlen, numeric=numeric, case=case)
+                        self.result = solver.normal(self.captcha_url, minlen=minlen, maxlen=maxlen, numeric=numeric, case=case)
                         self.work = True
                     except Exception as e:
                         self.logger.error(f"CAPTCHA SOLVER ERROR: {e}")
