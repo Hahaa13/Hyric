@@ -26,6 +26,7 @@ class OwO_Captcha(commands.Cog):
                 self.bot.logger.warning("CAPTCHA LINK FOUND")
                 await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA LINK FOUND", ping=True)
                 captcha = HCaptchaSolver(self.bot.configs, self.bot.logger, "a6a1d5ce-612d-472d-8e37-7601408fbc09", "https://owobot.com/captcha")
+                captcha.solver()
                 headers = {"Accept": "application/json, text/plain, */*","Accept-Encoding": "gzip, deflate, br","Accept-Language": "en-US;en;q=0.8","Content-Type": "application/json;charset=UTF-8","Origin": "https://owobot.com","Referer": "https://owobot.com/captcha",'Sec-Fetch-Dest': 'empty','Sec-Fetch-Mode': 'cors','Sec-Fetch-Site': 'same-origin',"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0"}
                 for retry in range(self.owo.configs["max_link_captcha_attemp"]):
                     if not captcha.work:
