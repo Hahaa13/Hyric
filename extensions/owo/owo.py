@@ -48,7 +48,7 @@ class OwO(commands.Cog):
     
     @tasks.loop(minutes=3)
     async def owo_delay_check(self):
-        if not (self.captcha and self.pause):
+        if not (self.captcha or self.pause):
             async for message in self.bot.channel.history(limit=10):
                 if message.author.id == self.configs["owo_id"]:
                     self.bot.logger.info("OWO DELAY CHECK - ONLINE")
@@ -281,6 +281,14 @@ class OwO(commands.Cog):
                 wait_sec += int(re.findall("[0-9]{0,2}H",wait_time)[0].replace("H", ""))*60*60
             self.bot.logger.info(f"OWO HUNTBOT SEND {self.configs['enables']['huntbot']}. WILL BACK IN {wait_time}")
             await asyncio.sleep(wait_sec)
+    
+    @huntbot.before_loop
+    async def before_hunbot(self) -> None:
+        if self.configs["enables"]["upgrade_huntbot"]:
+            await self.cooldown_command()
+            utype = random.choice(self.configs["enables"]["upgrade_hunbot"]) if len(self.configs["enables"]["upgrade_huntbot"]) > 1 else self.configs["enables"]["upgrade_huntbot"][0]
+            await self.bot.channel.send(f"{self.configs['owo_prefix']} upgrade {utype} all")
+            self.bot.logger.info(f"OWO UPGRADE {utype.upper()}")
 
     @tasks.loop(seconds=3)
     async def text_exp(self):

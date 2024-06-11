@@ -28,6 +28,7 @@ def runbot(bot, token):
     async def on_ready():
         bot.logger = logging.getLogger(bot.user.display_name)
         bot.webhook = BotWebhook(bot.configs, bot.logger)
+        await bot.webhook.setup()
         logfile = logging.FileHandler(f"logs/log_{bot.user.display_name}.log", "w", "utf-8")
         logfile.setFormatter(logging.Formatter(f"{bot.user.display_name} - %(levelname)s - %(message)s"))
         bot.logger.addHandler(logfile)
@@ -46,7 +47,7 @@ for account in configs["accounts"]:
     thread = threading.Thread(target=runbot, daemon=True, args=(bot, account["token"]))
     thread.start()
     threads.append(thread)
-    time.sleep(0.5)
+    time.sleep(1)
 
 for therad in threads: 
     therad.join()
