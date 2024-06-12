@@ -35,7 +35,7 @@ class OwO_Captcha(commands.Cog):
                     oauth = Oauth2(self.bot.account["token"], "https://discord.com/oauth2/authorize?response_type=code&redirect_uri=https%3A%2F%2Fowobot.com%2Fapi%2Fauth%2Fdiscord%2Fredirect&scope=identify%20guilds%20email%20guilds.members.read&client_id=408785106942164992", self.bot.logger)
                     async with (await oauth.get_oauth()) as session:
                         cookies = {cookie.key: cookie.value for cookie in session.cookie_jar}
-                        async with session.get("https://owobot.com/api/captcha/verify",headers=headers,json={"token": captcha.getresult()},cookies=cookies) as res:
+                        async with session.post("https://owobot.com/api/captcha/verify",headers=headers,json={"token": captcha.getresult()},cookies=cookies) as res:
                             self.bot.logger.info(f"SOLVED CAPTCHA LINK - {res.status}")
                             await self.bot.webhook.send(self.bot.user, f"OWO CAPTCHA LINK SOLVED - {res.status}")
                             self.owo.pause = False

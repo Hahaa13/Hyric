@@ -7,6 +7,7 @@ class CaptchaSolverNormal:
         self.configs = configs
         self.logger = logger
         self.solver_name = None
+        self.solver = None
         self.result = None
         self.work = False
     
@@ -15,8 +16,8 @@ class CaptchaSolverNormal:
             if captcha_solver["enable"]:
                 if captcha_solver["name"] == "2captcha":
                     try:
-                        solver = TwoCaptcha(captcha_solver["api_key"])
-                        self.result = solver.normal(self.captcha_url, minlen=minlen, maxlen=maxlen, numeric=numeric, case=case)
+                        self.solver = TwoCaptcha(captcha_solver["api_key"])
+                        self.result = self.solver.normal(self.captcha_url, minlen=minlen, maxlen=maxlen, numeric=numeric, case=case)
                         self.work = True
                     except Exception as e:
                         self.logger.error(f"CAPTCHA SOLVER ERROR: {e}")
