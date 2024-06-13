@@ -56,7 +56,7 @@ class OwO(commands.Cog):
             else:
                 if self.configs["better_delay_check"]:
                     await self.cooldown_command()
-                    await self.bot.channel.send(f"{self.configs['owo_prefix']} help")
+                    await self.bot.channel.send(f"{self.configs['owo_prefix']} ping")
                     def check(m) -> bool:
                         return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "🏓" in m.content
                     try:
