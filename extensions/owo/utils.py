@@ -29,7 +29,7 @@ class Gem:
         await self.cooldown_command()
         await channel.send(f"{self.configs['owo_prefix']} inv")
         self.bot.logger.info("OWO INVENTORY")
-        message = await self.bot.wait_for('message', check=self._check, timeout=5)
+        message = await self.bot.wait_for('message', check=self._check, timeout=10)
         content = message.content
         if "050" in content and self.configs["use_lootbox"]:
             await self.cooldown_command()
@@ -38,7 +38,7 @@ class Gem:
             await self.cooldown_command()
             await channel.send(f"{self.configs['owo_prefix']} inv")
             self.bot.logger.info("OWO INV")
-            message = await self.bot.wait_for("message", check=self._check, timeout=5)
+            message = await self.bot.wait_for("message", check=self._check, timeout=10)
         content = message.content
         for k,v in self.mapping.items():
             content = content.replace(k,v)

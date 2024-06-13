@@ -60,7 +60,7 @@ class OwO(commands.Cog):
                     def check(m) -> bool:
                         return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "🏓" in m.content
                     try:
-                        await self.bot.wait_for("message", check=check, timeout=3)
+                        await self.bot.wait_for("message", check=check, timeout=10)
                         return
                     except asyncio.TimeoutError or TimeoutError: pass
                 self.pause = True
@@ -100,7 +100,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} hunt")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🌱 | {self.bot.user.display_name}**" in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         xp = re.findall("[0-9]{1,99}xp", message.content)[0]
         self.bot.logger.info(f"OWO HUNT - {xp.upper()}")
         if self.configs["use_gem"]:
@@ -133,7 +133,7 @@ class OwO(commands.Cog):
         timesec = self.getTimeCooldown()
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         if f"**⏱ |** Nu! **{self.bot.user.display_name}**!" in message.content:
             self.bot.logger.info(f"DAILY COOLDOWN {timesec}s")
         elif f"💰 **| {self.bot.user.display_name}**, Here is your daily " in message.content:
@@ -157,7 +157,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} sell {self.configs['enables']['sell']}")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🔪 | {self.bot.user.display_name}** sold" in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=8)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         cow = re.findall(" [0-9]{1,99}", message.content)[0]
         self.bot.logger.info(f"OWO SELL {self.configs['enables']['sell'].upper()} -{cow} COW")
         await asyncio.sleep(random.randint(600, 650))
@@ -168,7 +168,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} sac {self.configs['enables']['sac']}")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and f"**🔪 | {self.bot.user.display_name}** sacrificed" in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=8)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         sac = re.findall(" [0-9]{1,99}", message.content)[0]
         self.bot.logger.info(f"OWO SAC {self.configs['enables']['sac'].upper()} -{sac} SACRIFICED")
         await asyncio.sleep(random.randint(600, 650))
@@ -191,7 +191,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} run")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "run" in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         if "🚫" in message.content:
             self.bot.logger.info("OWO RUN FULL")
             self.addCache("run")
@@ -209,7 +209,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} pup")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "pup" in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         if "🚫" in message.content:
             self.bot.logger.info("OWO PUP FULL")
             self.addCache("pup")
@@ -227,7 +227,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} piku")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "carrot" in m.content
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         if "🚫" in message.content:
             self.bot.logger.info("OWO PIKU FULL")
             self.addCache("piku")
@@ -243,7 +243,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']}")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and ("bot:" in m.content or "password" in m.content)
-        message = await self.bot.wait_for('message', check=check, timeout=5)
+        message = await self.bot.wait_for('message', check=check, timeout=10)
         if "|** `BEEP BOOP. I AM BACK WITH" in message.content:
             self.bot.logger.info("OWO HUNTBOT CLAIMED")
             return
@@ -274,7 +274,7 @@ class OwO(commands.Cog):
                 await asyncio.sleep(10)
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']} {solve_text}")
-            message = await self.bot.wait_for('message', check=check, timeout=5)
+            message = await self.bot.wait_for('message', check=check, timeout=10)
             wait_time = re.findall("[0-9]{0,2}H{0,1} {0,1}[0-9]{1,2}M", message.content)[0]
             wait_sec = int(re.findall("[0-9]{1,2}M",wait_time)[0].replace("M", ""))*60
             if "H" in wait_time:
@@ -342,7 +342,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} cf {self.coinflip_cow}")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
-        message = await self.bot.wait_for("message", check=check, timeout=5)
+        message = await self.bot.wait_for("message", check=check, timeout=10)
         await asyncio.sleep(random.randint(5,8))
         if "lost" in message.content:
             self.bot.logger.info(f"OWO COINFLIP LOST {self.coinflip_cow}")
@@ -359,7 +359,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} slot {self.slot_cow}")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and self.bot.user.display_name in m.content
-        message = await self.bot.wait_for("message", check=check, timeout=5)
+        message = await self.bot.wait_for("message", check=check, timeout=10)
         await asyncio.sleep(random.randint(6,8))
         if "nothing" in message.content:
             self.bot.logger.info(f"OWO SLOT LOST {self.slot_cow}")
@@ -377,7 +377,7 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} bj {self.blackjack_cow}")
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and len(m.embeds) == 1 and self.bot.user.name in m.embeds[0].author.name
-        message = await self.bot.wait_for("message", check=check, timeout=5)
+        message = await self.bot.wait_for("message", check=check, timeout=10)
         while True:
             await asyncio.sleep(3)
             if "in progress" in message.embeds[0].footer.text or "resuming" in message.embeds[0].footer.text:
