@@ -11,7 +11,7 @@ class CaptchaSolverNormal:
         self.result = None
         self.work = False
     
-    def solver(self, minlen: int, maxlen: int, numeric: int = 4, case: bool = True) -> None:
+    def solve(self, minlen: int, maxlen: int, numeric: int = 4, case: bool = True) -> None:
         for captcha_solver in self.configs["captcha_solvers"]:
             if captcha_solver["enable"]:
                 if captcha_solver["name"] == "2captcha":
