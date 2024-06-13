@@ -299,6 +299,8 @@ class OwO(commands.Cog):
                 if dt["status"] == "OK":
                     await self.bot.channel.send(dt["data"][0]["content"])
                     self.bot.logger.info("OWO RANDOM TEXT EXP")
+                else:
+                    self.bot.logger.warning("OWO RANDOM TEXT API DOWN")
         await asyncio.sleep(random.randint(60, 120))
 
     @tasks.loop(seconds=3)

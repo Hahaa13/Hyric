@@ -22,6 +22,6 @@ class BotWebhook:
             embed = Embed(title=title, description=description, colour=colour)
             embed.set_author(name=user.display_name, icon_url=user.display_avatar.url)
             content = f"<@{user.id}> " + " ".join([f"<@{user}>" for user in self.configs["user_ping_webhook"]]) if ping else None
-            await wbh.send(content=content, embed=embed)
+            await self.wbh.send(content=content, embed=embed)
             return
         self.logger.warning("WEBHOOK NOT FOUND AND MESSAGE WILL NOT SEND")
