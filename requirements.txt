@@ -1,6 +1,7 @@
 git+https://github.com/dolfies/discord.py-self
 2captcha-python
 aiohttp
+brotli
 asyncio
 numpy
 pillow
