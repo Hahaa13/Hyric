@@ -3,6 +3,7 @@
         {
             "token": "",
             "channel_ids": [],
+            "voice_afk": false,
             "command_prefixs": ["sb!"]
         }
     ],
