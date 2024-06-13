@@ -14,8 +14,7 @@ class BotWebhook:
     async def setup(self):
         if not self.webhook_url:
             return
-        async with ClientSession() as session:
-            self.wbh = Webhook.from_url(self.webhook_url, session=session)
+        self.wbh = Webhook.from_url(self.webhook_url, session=ClientSession())
 
     async def send(self, user: User, title: str = None, description: str = None, ping: bool = False, colour: Colour = Colour.random()) -> None:
         if self.wbh:
