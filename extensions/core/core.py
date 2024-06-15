@@ -8,8 +8,8 @@ class Core(commands.Cog):
         self.configs = json.load(open("extensions/core/_configs.json"))
 
     async def cog_load(self):
-        if self.configs["voicechannel_afk"]:
-            vc = self.bot.get_channel(self.configs["voicechannel_afk"])
+        if self.bot.account["voice_afk"]:
+            vc = self.bot.get_channel(self.bot.account["voice_afk"])
             await vc.connect()
 
 async def setup(bot: Bot) -> None:
