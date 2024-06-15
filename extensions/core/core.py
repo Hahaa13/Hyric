@@ -5,7 +5,6 @@ from utils.bot import Bot
 class Core(commands.Cog):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
-        self.configs = json.load(open("extensions/core/_configs.json"))
 
     async def cog_load(self):
         if self.bot.account["voice_afk"]:
