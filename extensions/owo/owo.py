@@ -440,9 +440,9 @@ class OwO(commands.Cog):
         def check(m) -> bool:
             return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and len(m.embeds) == 1 and str(self.bot.user.id) in m.embeds[0].description
         message = await self.bot.wait_for("message", check=check, timeout=10)
-        quests = re.findall("\*\*(.*?)\*\*", message.embeds[0].description)
-        rewards = re.findall("` [0-9]{0,10},{0,1}[0-9]{0,10} {0,1}<(:[a-z]{1,25}:)", message.embeds[0].description)
-        pg = re.findall("\[([0-9]{1,3})/([0-9]{1,3})", message.embeds[0].description)
+        quests = re.findall(r"\*\*(.*?)\*\*", message.embeds[0].description)
+        rewards = re.findall(r"` [0-9]{0,10},{0,1}[0-9]{0,10} {0,1}<(:[a-z]{1,25}:)", message.embeds[0].description)
+        pg = re.findall(r"\[([0-9]{1,3})/([0-9]{1,3})", message.embeds[0].description)
         progress = [int(pg[quests.index(quest)][1]) - int(pg[quests.index(quest)][0]) for quest in quests]
         quests, rewards, progress = Quest.sort_quest(quests, rewards, progress)
         for quest, reward, progres in zip(quests, rewards, progress):
@@ -465,6 +465,8 @@ class OwO(commands.Cog):
                 elif "curse" in quest.lower():
                     self.bot.logger.info("QUEST START CURSE")
                     asyncio.create_task(quest_handler.pray_or_curse("curse"))
-
+                elif "pray" in quest.lower():
+                    self.bot.logger.info("QUEST START PRAY")
+                    asyncio.create_task(quest_handler.pray_or_curse("pray"))
 async def setup(bot: Bot) -> None:
     await bot.add_cog(OwO(bot))

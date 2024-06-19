@@ -46,78 +46,68 @@ class Quest:
         self.bot.logger.info(f"OWO QUEST REROLL {self.quest_id}")
 
     async def gamble_quest(self) -> None:
-        running = self.owo.coinflip.is_running()
-        if not running:
+        if not self.owo.coinflip.is_running():
             self.owo.configs["coinflip_rate"] = 1
             self.owo.configs["enables"]["coinflip"] = 1
             self.owo.coinflip_cow = 1
             self.owo.coinflip.start()
         while self.quest[1] >= self.owo.coinflip.current_loop:
             await asyncio.sleep(3)
-        else:
-            if not running:
-                self.owo.coinflip.stop()
-            self.bot.logger.info(f"QUEST {self.quest_id} DONE")
+        if not self.owo.coinflip.is_running():
+            self.owo.coinflip.stop()
+        self.bot.logger.info(f"QUEST {self.quest_id} DONE")
 
     async def say_owo(self) -> None:
-        running = self.owo.text_owo.is_running()
-        if not running:
+        if not self.owo.text_owo.is_running():
             self.owo.text_owo.start()
         while self.quest[1] >= self.owo.text_owo.current_loop:
-            await asyncio.sleep(3)
-        else:
-            if not running:
-                self.owo.text_owo.stop()
-            self.bot.logger.info(f"QUEST {self.quest_id} DONE")
+            await asyncio.sleep(15)
+        if not self.owo.text_owo.is_running():
+            self.owo.text_owo.stop()
+        self.bot.logger.info(f"QUEST {self.quest_id} DONE")
     
     async def use_action(self) -> None:
-        if len(self.bot.bots) < 2: return
-        loop_counts = 0
+        if len(self.bot.bots) < 2:
+            self.bot.logger.info("NOT FOUND MULTI BOT. QUEST {self.quest_id} STOP")
+            return
         tasks = []
-        while self.quest[1] >= loop_counts:
+        while self.quest[1] >= sum(task[0].current_loop for task in tasks):
             for otherbot in self.bot.bots:
-                if self.bot != otherbot:
-                    owo = otherbot.get_cog("OwO")
-                    if owo and not owo.use_action_command.is_running():
-                        owo.configs["use_action_command_target"] = self.bot.user.id
-                        owo.use_action_command.start()
-                        tasks.append(owo.use_action_command)
-            loop_counts = 0
-            for task in tasks:
-                loop_counts += task.current_loop
-            await asyncio.sleep(3)
-        else:
-            for task in tasks:
-                task.stop()
-            self.bot.logger.info(f"QUEST {self.quest_id} DONE")
-    
+                if self.bot == otherbot:
+                    continue
+                owo = otherbot.get_cog("OwO")
+                if owo and not owo.use_action_command.is_running():
+                    owo.configs["use_action_command_target"] = self.bot.user.id
+                    owo.use_action_command.start()
+                    tasks.append(owo.use_action_command)
+            await asyncio.sleep(15)
+        for task in tasks:
+            task.stop()
+        self.bot.logger.info(f"QUEST {self.quest_id} DONE")
+
     async def pray_or_curse(self, poc: str) -> None:
-        if len(self.bot.bots) < 2: return
-        loop_counts = 0
+        if len(self.bot.bots) < 2:
+            self.bot.logger.warning(f"NOT FOUND MULTI BOT. QUEST {self.quest_id} STOP")
+            return
         tasks = []
-        while self.quest[1] >= loop_counts:
+        while self.quest[1] >= sum(task[0].current_loop for task in tasks):
             for otherbot in self.bot.bots:
-                if otherbot != self.bot:
-                    owo = otherbot.get_cog("OwO")
-                    if owo and not owo.configs["pray_or_curse_id"]:
-                        owo.configs["enables"]["pray_or_curse"] = poc
-                        owo.configs["pray_or_curse_id"] = self.bot.user.id
-                        running = owo.pray_or_curse.is_running()
-                        poc_target = owo.configs["enables"]["pray_or_curse"]
-                        if not running:
-                            owo.pray_or_curse.start()
-                        tasks.append((owo.pray_or_curse, running, owo, poc_target))
-            loop_counts = 0
-            for task in tasks:
-                loop_counts += task[0].current_loop
-            await asyncio.sleep(3)
-        else:
-            for task in tasks:
-                task[2].configs["pray_or_curse_id"] = False
-                task[2].configs["enables"]["pray_or_curse"] = task[3]
-                if not task[1]:
-                    task[0].stop()
-            self.bot.logger.info(f"QUEST {self.quest_id} DONE")
+                if otherbot == self.bot:
+                    continue
+                owo = otherbot.get_cog("OwO")
+                if owo and not owo.configs["pray_or_curse_id"]:
+                    owo.configs["enables"]["pray_or_curse"] = poc
+                    owo.configs["pray_or_curse_id"] = self.bot.user.id
+                    if not owo.pray_or_curse.is_running():
+                        owo.pray_or_curse.start()
+                    tasks.append((owo.pray_or_curse, owo.pray_or_curse.is_running(), owo, owo.configs["enables"]["pray_or_curse"]))
+            await asyncio.sleep(300)
+        for task in tasks:
+            task[2].configs["pray_or_curse_id"] = False
+            task[2].configs["enables"]["pray_or_curse"] = task[3]
+            if not task[1]:
+               task[0].stop()
+        self.bot.logger.info(f"QUEST {self.quest_id} DONE")
 
 class Gem:
     def __init__(self, bot, cooldown_command, configs) -> None:
