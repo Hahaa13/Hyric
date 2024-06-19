@@ -21,6 +21,7 @@ with open("configs.json", "r") as f:
     configs = json.load(f)
 
 threads = []
+bots = []
 discord.utils.setup_logging()
 
 def runbot(bot, token):
@@ -43,7 +44,8 @@ def runbot(bot, token):
     bot.run(token, log_handler=None)
 
 for account in configs["accounts"]:
-    bot = Bot(command_prefix=account["command_prefixs"], configs=configs, account=account, self_bot=True)
+    bot = Bot(command_prefix=account["command_prefixs"], bots=bots, configs=configs, account=account, self_bot=True)
+    bots.append(bot)
     thread = threading.Thread(target=runbot, daemon=True, args=(bot, account["token"]))
     thread.start()
     threads.append(thread)

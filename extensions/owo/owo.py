@@ -17,7 +17,7 @@ class OwO(commands.Cog):
         self.lock = asyncio.Lock()
         self.hbcaptcha = HuntBotCaptcha()
         self.configs = json.load(open("extensions/owo/_configs.json"))
-        self.caches = json.load(open(f"extensions/owo/caches/{self.bot.user.id}_cache.json")) if os.path.exists(f"extensions/owo/caches/{self.bot.user.id}_cache.json") else {"time": 0, "giveaway_join": [], "checks": {"daily": False, "cookie": False, "run": False, "pup": False, "piku": False}}
+        self.caches = json.load(open(f"extensions/owo/caches/{self.bot.user.id}_cache.json")) if os.path.exists(f"extensions/owo/caches/{self.bot.user.id}_cache.json") else {"time": 0, "giveaway_join": [], "checks": {"daily": False, "cookie": False, "run": False, "pup": False, "piku": False, "quest_reroll": False}}
         self.gem = Gem(bot, self.cooldown_command, self.configs)
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0
@@ -145,9 +145,21 @@ class OwO(commands.Cog):
     async def pray_or_curse(self):
         await self.cooldown_command()
         poc_user = ""
-        if self.configs["pray_or_curse_id"] > 0:
+        if self.configs["pray_or_curse_id"]:
             poc_user = f"<@{self.configs['pray_or_curse_id']}>"
         await self.bot.channel.send(f"{self.configs['owo_prefix']} {self.configs['enables']['pray_or_curse']} {poc_user}")
+        def check(m) -> bool:
+            return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and (str(self.bot.user.id) in m.content or self.bot.user.name in m.content or self.bot.user.display_name in m.content) and ("pray" in m.content or "curse" in m.content or "⏱" in m.content)
+        try:
+            message = await self.bot.wait_for("message", check=check, timeout=10)
+        except asyncio.TimeoutError:
+            await asyncio.sleep(310)
+            return
+        if "⏱" in message.content:
+            waitime = int(re.findall(":([0-9]{8,18})", message.content)[0])
+            self.bot.logger.info(f"OWO {self.configs['enables']['pray_or_curse'].upper()} {poc_user} COOLDOWN")
+            await asyncio.sleep(waitime - datetime.datetime.utcnow().timestamp() + 5)
+            return
         self.bot.logger.info(f"OWO {self.configs['enables']['pray_or_curse'].upper()} {poc_user}")
         await asyncio.sleep(random.randint(310, 360))
 
@@ -270,8 +282,11 @@ class OwO(commands.Cog):
                 await asyncio.sleep(wait_min*60)
         if len(message.attachments) > 0:
             solve_text = self.hbcaptcha.gettext(await self.hbcaptcha.solver(message.attachments[0].url))
-            while self.captcha:
-                await asyncio.sleep(10)
+            if self.configs["enables"]["upgrade_huntbot"]:
+                utype = random.choice(self.configs["enables"]["upgrade_hunbot"]) if len(self.configs["enables"]["upgrade_huntbot"]) > 1 else self.configs["enables"]["upgrade_huntbot"][0]
+                await self.cooldown_command()
+                await self.bot.channel.send(f"{self.configs['owo_prefix']} upgrade {utype} all")
+                self.bot.logger.info(f"OWO UPGRADE {utype.upper()}")
             await self.cooldown_command()
             await self.bot.channel.send(f"{self.configs['owo_prefix']} hb {self.configs['enables']['huntbot']} {solve_text}")
             message = await self.bot.wait_for('message', check=check, timeout=10)
@@ -281,14 +296,6 @@ class OwO(commands.Cog):
                 wait_sec += int(re.findall("[0-9]{0,2}H",wait_time)[0].replace("H", ""))*60*60
             self.bot.logger.info(f"OWO HUNTBOT SEND {self.configs['enables']['huntbot']}. WILL BACK IN {wait_time}")
             await asyncio.sleep(wait_sec)
-    
-    @huntbot.before_loop
-    async def before_hunbot(self) -> None:
-        if self.configs["enables"]["upgrade_huntbot"]:
-            await self.cooldown_command()
-            utype = random.choice(self.configs["enables"]["upgrade_hunbot"]) if len(self.configs["enables"]["upgrade_huntbot"]) > 1 else self.configs["enables"]["upgrade_huntbot"][0]
-            await self.bot.channel.send(f"{self.configs['owo_prefix']} upgrade {utype} all")
-            self.bot.logger.info(f"OWO UPGRADE {utype.upper()}")
 
     @tasks.loop(seconds=3)
     async def text_exp(self):
@@ -296,7 +303,7 @@ class OwO(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(f"https://fakerapi.it/api/v1/texts?_quantity=1?&_characters={random.randint(25,150)}") as resp:
                 dt = await resp.json()
-                if dt["status"] == "OK":
+                if dt and dt["status"] == "OK":
                     await self.bot.channel.send(dt["data"][0]["content"])
                     self.bot.logger.info("OWO RANDOM TEXT EXP")
                 else:
@@ -311,6 +318,8 @@ class OwO(commands.Cog):
         await asyncio.sleep(random.randint(60,120))
 
     async def cog_load(self) -> None:
+        if self.configs['enables']['quests']:
+            asyncio.create_task(self.quests())
         for c in self.configs["giveaway_channels"]:
             channel = self.bot.get_channel(c)
             if not channel is None:
@@ -415,6 +424,47 @@ class OwO(commands.Cog):
         await self.bot.channel.send(f"{self.configs['owo_prefix']} buy {bi}")
         self.bot.logger.info(f"OWO BUY {bi}")
         await asyncio.sleep(18,25)
+    
+    @tasks.loop(seconds=3)
+    async def use_action_command(self) -> None:
+        await self.cooldown_command()
+        atype = random.choice(["wave", "kiss", "kill", "hug", "slap"])
+        await self.bot.channel.send(f"{self.configs['owo_prefix']} {atype} <@{self.configs['use_action_command_target']}>")
+        self.bot.logger.info(f"OWO ACTION COMMAND ({atype.upper()}) {target}")
+        await asyncio.sleep(random.randint(18,25))
+
+    async def quests(self):
+        await self.cooldown_command()
+        await self.bot.channel.send(f"{self.configs['owo_prefix']} quest")
+        self.bot.logger.info("OWO QUEST")
+        def check(m) -> bool:
+            return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and len(m.embeds) == 1 and str(self.bot.user.id) in m.embeds[0].description
+        message = await self.bot.wait_for("message", check=check, timeout=10)
+        quests = re.findall("\*\*(.*?)\*\*", message.embeds[0].description)
+        rewards = re.findall("` [0-9]{0,10},{0,1}[0-9]{0,10} {0,1}<(:[a-z]{1,25}:)", message.embeds[0].description)
+        pg = re.findall("\[([0-9]{1,3})/([0-9]{1,3})", message.embeds[0].description)
+        progress = [int(pg[quests.index(quest)][1]) - int(pg[quests.index(quest)][0]) for quest in quests]
+        quests, rewards, progress = Quest.sort_quest(quests, rewards, progress)
+        for quest, reward, progres in zip(quests, rewards, progress):
+            quest_handler = Quest(self, [quest, progres, reward])
+            if not quest_handler.candone():
+                if not self.caches["checks"]["quest_reroll"]:
+                    await quest_handler.reroll()
+                    self.addCache("quest_reroll")
+                    return await self.quests()
+            else:
+                if "gamble" in quest.lower():
+                    self.bot.logger.info("QUEST START GAMBLE")
+                    asyncio.create_task(quest_handler.gamble_quest())
+                elif "say" in quest.lower():
+                    self.bot.logger.info("QUEST START SAY OWO")
+                    asyncio.create_task(quest_handler.say_owo())
+                elif "action command on you" in quest.lower():
+                    self.bot.logger.info("QUEST START USE ACTION ON YOU")
+                    asyncio.create_task(quest_handler.use_action())
+                elif "curse" in quest.lower():
+                    self.bot.logger.info("QUEST START CURSE")
+                    asyncio.create_task(quest_handler.pray_or_curse("curse"))
 
 async def setup(bot: Bot) -> None:
     await bot.add_cog(OwO(bot))

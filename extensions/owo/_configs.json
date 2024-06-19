@@ -9,6 +9,8 @@
     "sleep_time": 600,
     "auto_join_battle": "accept",
     "better_delay_check": true,
+    "quest_rewards_allow": ["box", "crate", "weaponshard", "cowoncy"],
+    "quest_reroll": true,
     "use_gem": true,
     "use_star_gem": false,
     "use_lootbox": true,
@@ -38,6 +40,7 @@
         "coinflip": false,
         "blackjack": false,
         "buy": false,
+        "quests": true,
         "giveaway_join": true
     }
 }

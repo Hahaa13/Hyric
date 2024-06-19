@@ -18,13 +18,13 @@ class OwO_Captcha(commands.Cog):
             self.dm_channel = await self.owo_user.create_dm()
 
     @commands.Cog.listener()
-    async def on_message(self, message) -> None:
+    async def on_message(self, message: discord.Message) -> None:
         if self.owo_user.id == message.author.id or self.bot.user.id == message.author.id:
             if "https://owobot.com/captcha" in message.content and (isinstance(message.channel, discord.channel.DMChannel) or self.bot.user.display_name in message.content or self.bot.user.name in message.content or str(self.bot.user.id) in message.content):
                 self.owo.pause = True
                 self.owo.captcha = True
                 self.bot.logger.warning("CAPTCHA LINK FOUND")
-                await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA LINK FOUND", ping=True)
+                await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA LINK FOUND", message.jump_url,  ping=True)
                 captcha = HCaptchaSolver(self.bot.configs, self.bot.logger, "a6a1d5ce-612d-472d-8e37-7601408fbc09", "https://owobot.com/captcha")
                 captcha.solver()
                 headers = {"Accept": "application/json, text/plain, */*","Accept-Encoding": "gzip, deflate, br","Accept-Language": "en-US;en;q=0.8","Content-Type": "application/json;charset=UTF-8","Origin": "https://owobot.com","Referer": "https://owobot.com/captcha",'Sec-Fetch-Dest': 'empty','Sec-Fetch-Mode': 'cors','Sec-Fetch-Site': 'same-origin',"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0"}
@@ -48,7 +48,7 @@ class OwO_Captcha(commands.Cog):
                 self.owo.captcha = True
                 if len(message.attachments) > 0:
                     self.bot.logger.warning("CAPTCHA IMAGE FOUND")
-                    await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA IMAGE FOUND", ping=True)
+                    await self.bot.webhook.send(self.bot.user, "OWO CAPTCHA IMAGE FOUND", message.jump_url, ping=True)
                     length = int(re.findall("[0-9] letter", message.content)[0].replace(" letter", ""))
                     def check(m) -> bool:
                         return m.author.id == self.owo_user.id and isinstance(m.channel, discord.channel.DMChannel)
