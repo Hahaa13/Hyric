@@ -40,7 +40,6 @@ def runbot(bot, token):
                 except Exception as e:
                     bot.logger.error(e)
             bot.logger.info(f"Load extension {extension}")
-
     bot.run(token, log_handler=None)
 
 for account in configs["accounts"]:

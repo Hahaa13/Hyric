@@ -112,8 +112,9 @@ class OwO(commands.Cog):
     @tasks.loop(seconds=3)
     async def battle(self) -> None:
         await self.cooldown_command()
-        await self.bot.channel.send(f"{self.configs['owo_prefix']} battle")
-        self.bot.logger.info("OWO BATTLE")
+        target = f"<@{self.configs['battle_target']}>" if "battle_target" in self.configs and self.configs["battle_target"] else ""
+        await self.bot.channel.send(f"{self.configs['owo_prefix']} battle {target}")
+        self.bot.logger.info(f"OWO BATTLE {target}")
         await asyncio.sleep(random.randint(18,25))
     
     @commands.Cog.listener("on_message")
@@ -468,5 +469,8 @@ class OwO(commands.Cog):
                 elif "pray" in quest.lower():
                     self.bot.logger.info("QUEST START PRAY")
                     asyncio.create_task(quest_handler.pray_or_curse("pray"))
+                elif "battle with a friend" in quest.lower():
+                    self.bot.logger.info("QUEST START BATTLE WITH A FRIEND")
+                    asyncio.create_task(quest_handler.battle_with_friend())
 async def setup(bot: Bot) -> None:
     await bot.add_cog(OwO(bot))

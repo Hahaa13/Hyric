@@ -4,6 +4,7 @@ import re
 import io
 import asyncio
 import aiohttp
+import random
 import numpy as np
 from PIL import Image
 from utils.bot import Bot
@@ -46,24 +47,45 @@ class Quest:
         self.bot.logger.info(f"OWO QUEST REROLL {self.quest_id}")
 
     async def gamble_quest(self) -> None:
-        if not self.owo.coinflip.is_running():
+        running = self.owo.coinflip.is_running()
+        if not running:
             self.owo.configs["coinflip_rate"] = 1
             self.owo.configs["enables"]["coinflip"] = 1
             self.owo.coinflip_cow = 1
             self.owo.coinflip.start()
         while self.quest[1] >= self.owo.coinflip.current_loop:
             await asyncio.sleep(3)
-        if not self.owo.coinflip.is_running():
+        if not running:
             self.owo.coinflip.stop()
         self.bot.logger.info(f"QUEST {self.quest_id} DONE")
 
     async def say_owo(self) -> None:
-        if not self.owo.text_owo.is_running():
+        running = self.owo.text_owo.is_running()
+        if not running:
             self.owo.text_owo.start()
         while self.quest[1] >= self.owo.text_owo.current_loop:
             await asyncio.sleep(15)
-        if not self.owo.text_owo.is_running():
+        if not running:
             self.owo.text_owo.stop()
+        self.bot.logger.info(f"QUEST {self.quest_id} DONE")
+    
+    async def battle_with_friend(self) -> None:
+        if len(self.bot.bots) < 2:
+            self.bot.logger.info(f"NOT FOUND MULTI BOT. QUEST {self.quest_id} STOP")
+            return
+        battle_with_users = []
+        for otherbot in self.bot.bots:
+            if otherbot == self.bot:
+                continue
+            owo = otherbot.get_cog("OwO")
+            if owo and owo.configs["auto_join_battle"]:
+                battle_with_users.append(otherbot.user.id)
+        self.configs["battle_target"] = random.choice(battle_with_users)
+        if not self.owo.battle.is_running():
+            self.owo.battle.start()
+        while self.quest[1] >= self.owo.battle.current_loop:
+            await asyncio.sleep(3)
+        self.configs["battle_target"] = None
         self.bot.logger.info(f"QUEST {self.quest_id} DONE")
     
     async def use_action(self) -> None:

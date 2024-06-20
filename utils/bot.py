@@ -14,3 +14,8 @@ class Bot(commands.Bot):
         self.logger = None
         self.webhook = None
         super().__init__(*args, **kwargs)
+
+class Command:
+    def is_commamd(message, bot: Bot):
+        return (message.author.id in bot.account["user_allow_commands"] or message.author.id == bot.user.id) and any(message.content.startswith(p) for p in bot.command_prefix)
+
