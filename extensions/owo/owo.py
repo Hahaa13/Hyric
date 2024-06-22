@@ -46,27 +46,26 @@ class OwO(commands.Cog):
         with open(f"extensions/owo/caches/{self.bot.user.id}_cache.json", "w") as f:
             json.dump(self.caches, f)
     
-    @tasks.loop(minutes=3)
+    @tasks.loop(minutes=5)
     async def owo_delay_check(self):
-        if not (self.captcha or self.pause):
-            async for message in self.bot.channel.history(limit=10):
-                if message.author.id == self.configs["owo_id"]:
-                    self.bot.logger.info("OWO DELAY CHECK - ONLINE")
-                    break
-            else:
-                if self.configs["better_delay_check"]:
-                    await self.cooldown_command()
-                    await self.bot.channel.send(f"{self.configs['owo_prefix']} ping")
-                    def check(m) -> bool:
-                        return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "🏓" in m.content
-                    try:
-                        await self.bot.wait_for("message", check=check, timeout=10)
-                        return
-                    except asyncio.TimeoutError or TimeoutError: pass
-                self.pause = True
-                self.bot.logger.warning("OWO IS DELAY. BOF WILL SLEEP 10MINS")
-                await asyncio.sleep(600)
-                self.pause = False
+        await self.cooldown_command()
+        async for message in self.bot.channel.history(limit=10):
+            if message.author.id == self.configs["owo_id"]:
+                self.bot.logger.info("OWO ONLINE")
+                return
+        if self.configs["better_delay_check"]:
+            await self.cooldown_command()
+            await self.bot.channel.send(f"{self.configs['owo_prefix']} ping")
+            def check(m) -> bool:
+                return m.author.id == self.configs["owo_id"] and m.channel.id == self.bot.channel.id and "🏓" in m.content
+            try:
+                await self.bot.wait_for("message", check=check, timeout=10)
+                return
+            except asyncio.TimeoutError or TimeoutError: pass
+        self.pause = True
+        self.bot.logger.warning("OWO IS DELAY. BOF WILL SLEEP 10MINS")
+        await asyncio.sleep(600)
+        self.pause = False
 
     @tasks.loop(seconds=3)
     async def sleep(self):

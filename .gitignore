@@ -1,4 +1,5 @@
-# Hyric Caches
+# Hyric
+configs.json
 extensions/owo/caches/*.json
 
 # Byte-compiled / optimized / DLL files

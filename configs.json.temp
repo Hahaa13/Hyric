@@ -1,0 +1,21 @@
+{
+    "accounts": [
+        {
+            "token": "",
+            "channel_ids": [],
+            "voice_afk": false,
+            "command_prefixs": ["sb!"],
+            "user_allow_commands": []
+        }
+    ],
+    "change_channel_later": 30,
+    "webhook_url": "",
+    "user_ping_webhook": [],
+    "captcha_solvers": [
+        {
+            "enable": false,
+            "name": "2captcha",
+            "api_key": ""
+        }
+    ]
+}

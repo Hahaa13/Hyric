@@ -14,7 +14,7 @@
     "use_gem": true,
     "use_star_gem": false,
     "use_lootbox": true,
-    "gem_sort": "low",
+    "gem_sort": "hight",
     "pray_or_curse_id": false,
     "slot_rate": 2,
     "coinflip_rate": 2,
