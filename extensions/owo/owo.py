@@ -16,8 +16,13 @@ class OwO(commands.Cog):
         self.pause = False
         self.lock = asyncio.Lock()
         self.hbcaptcha = HuntBotCaptcha()
-        self.configs = json.load(open("extensions/owo/_configs.json"))
-        self.caches = json.load(open(f"extensions/owo/caches/{self.bot.user.id}_cache.json")) if os.path.exists(f"extensions/owo/caches/{self.bot.user.id}_cache.json") else {"time": 0, "giveaway_join": [], "checks": {"daily": False, "cookie": False, "run": False, "pup": False, "piku": False, "quest_reroll": False}}
+        with open("extensions/owo/_configs.json") as f:
+            self.configs = json.load(f)
+        if os.path.exists(f"extensions/owo/caches/{self.bot.user.id}_cache.json"):
+            with open(f"extensions/owo/caches/{self.bot.user.id}_cache.json") as f:
+                self.caches = json.load(f)
+        else:
+            self.caches = {"time": 0, "giveaway_join": [], "checks": {"daily": False, "cookie": False, "run": False, "pup": False, "piku": False, "quest_reroll": False}}
         self.gem = Gem(bot, self.cooldown_command, self.configs)
         self.slot_cow = self.configs["enables"]["slot"] if self.configs["enables"]["slot"] else 0
         self.coinflip_cow = self.configs["enables"]["coinflip"] if self.configs["enables"]["coinflip"] else 0

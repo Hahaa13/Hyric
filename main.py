@@ -30,9 +30,10 @@ def runbot(bot, token):
         bot.logger = logging.getLogger(bot.user.display_name)
         bot.webhook = BotWebhook(bot.configs, bot.logger)
         await bot.webhook.setup()
-        logfile = logging.FileHandler(f"logs/log_{bot.user.display_name}.log", "w", "utf-8")
+        logfile = logging.FileHandler(f"logs/log_{bot.user.id}.log", "w", "utf-8")
         logfile.setFormatter(logging.Formatter(f"{bot.user.display_name} - %(levelname)s - %(message)s"))
         bot.logger.addHandler(logfile)
+        bot.logger.info(f"Login as {bot.user.display_name}")
         for extension in glob.glob("extensions/**"):
             for extension_file in sorted(glob.glob(f"{extension}/**/*.py", recursive=True)):
                 try:
